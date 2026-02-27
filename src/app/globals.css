@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ── Font variables (set by Next.js font loader) ── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* ── Base colors ── */
+:root {
+  --background: #ffffff;
+  --foreground: #111111;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +24,115 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Reader theme variables ── */
+:root {
+  /* Light theme (default) */
+  --reader-bg: #ffffff;
+  --reader-text: #1a1a1a;
+  --reader-muted: #6b7280;
+  --reader-border: #e5e7eb;
+  --reader-font-size: 18px;
+  --reader-line-height: 1.8;
+}
+
+[data-reader-theme="sepia"] {
+  --reader-bg: #f8f0e3;
+  --reader-text: #3b2f1e;
+  --reader-muted: #7c6e5a;
+  --reader-border: #d4c4a8;
+}
+
+[data-reader-theme="dark"] {
+  --reader-bg: #1a1a1a;
+  --reader-text: #e5e5e5;
+  --reader-muted: #9ca3af;
+  --reader-border: #374151;
+}
+
+/* ── Reader typography ── */
+.reader-content {
+  font-size: var(--reader-font-size);
+  line-height: var(--reader-line-height);
+  color: var(--reader-text);
+  background: var(--reader-bg);
+}
+
+.reader-content p {
+  margin-bottom: 1.25em;
+}
+
+.reader-content h1,
+.reader-content h2,
+.reader-content h3,
+.reader-content h4 {
+  font-weight: 700;
+  margin-top: 1.75em;
+  margin-bottom: 0.75em;
+  line-height: 1.3;
+}
+
+.reader-content h1 { font-size: 1.75em; }
+.reader-content h2 { font-size: 1.4em; }
+.reader-content h3 { font-size: 1.2em; }
+
+.reader-content blockquote {
+  border-left: 3px solid var(--reader-border);
+  margin: 1.5em 0;
+  padding: 0.5em 1.25em;
+  color: var(--reader-muted);
+  font-style: italic;
+}
+
+.reader-content code {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.875em;
+  background: var(--reader-border);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+}
+
+.reader-content pre {
+  background: var(--reader-border);
+  border-radius: 8px;
+  padding: 1em 1.25em;
+  overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+.reader-content pre code {
+  background: none;
+  padding: 0;
+}
+
+.reader-content ul,
+.reader-content ol {
+  margin: 1em 0;
+  padding-left: 1.5em;
+}
+
+.reader-content li {
+  margin-bottom: 0.5em;
+}
+
+.reader-content a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Prose (TailwindCSS typography fallback) ── */
+.prose {
+  color: var(--reader-text, #1a1a1a);
+}
+
+.prose p { margin-bottom: 1.25em; }
+.prose h1, .prose h2, .prose h3 {
+  font-weight: 700;
+  margin-top: 1.75em;
+  margin-bottom: 0.75em;
 }

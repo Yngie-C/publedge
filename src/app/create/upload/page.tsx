@@ -1,0 +1,189 @@
+"use client";
+
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { CheckCircle } from "lucide-react";
+import { FileDropzone } from "@/components/upload/FileDropzone";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { Header } from "@/components/layout/Header";
+
+interface DetectedChapter {
+  title: string;
+  preview: string;
+}
+
+function UploadContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const title = searchParams.get("title") ?? "";
+  const description = searchParams.get("description") ?? "";
+  const language = searchParams.get("language") ?? "ko";
+
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [chapters, setChapters] = useState<DetectedChapter[]>([]);
+  const [bookId, setBookId] = useState<string | null>(null);
+  const [error, setError] = useState("");
+
+  const handleFileSelect = (f: File) => {
+    setFile(f);
+    setChapters([]);
+    setBookId(null);
+    setError("");
+  };
+
+  const handleUpload = async () => {
+    if (!file) return;
+    setUploading(true);
+    setProgress(10);
+    setError("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("language", language);
+
+      // Simulate progress ticks
+      const ticker = setInterval(() => {
+        setProgress((p) => Math.min(p + 10, 85));
+      }, 400);
+
+      const res = await fetch("/api/books/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      clearInterval(ticker);
+      setProgress(100);
+
+      if (!res.ok) {
+        const json = await res.json();
+        throw new Error(json.error ?? "업로드에 실패했습니다.");
+      }
+
+      const json = await res.json();
+      setBookId(json.data.id);
+      setChapters(json.data.chapters ?? []);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "업로드 중 오류가 발생했습니다.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleConfirm = () => {
+    if (bookId) router.push(`/create/edit/${bookId}`);
+  };
+
+  return (
+    <div className="flex min-h-screen flex-col bg-gray-50">
+      <Header />
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-12 sm:px-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">파일 업로드</h1>
+          <p className="mt-2 text-gray-500">
+            &ldquo;{title}&rdquo; 전자책의 원고 파일을 업로드하세요.
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+          <div className="flex flex-col gap-6">
+            <FileDropzone onFileSelect={handleFileSelect} />
+
+            {error && (
+              <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+
+            {/* Progress */}
+            {uploading && (
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between text-sm text-gray-600">
+                  <span>업로드 중...</span>
+                  <span>{progress}%</span>
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                  <div
+                    className="h-full rounded-full bg-gray-900 transition-all duration-300"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Chapter preview */}
+            {chapters.length > 0 && (
+              <div className="rounded-lg border border-green-200 bg-green-50 p-4">
+                <div className="mb-3 flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span className="font-medium text-green-800">
+                    {chapters.length}개의 챕터가 감지되었습니다
+                  </span>
+                </div>
+                <ul className="flex flex-col gap-1.5 text-sm text-green-700">
+                  {chapters.slice(0, 5).map((ch, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span className="font-medium shrink-0">{i + 1}.</span>
+                      <span>
+                        {ch.title}
+                        {ch.preview && (
+                          <span className="ml-1 text-green-600 opacity-70">
+                            — {ch.preview.slice(0, 40)}...
+                          </span>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                  {chapters.length > 5 && (
+                    <li className="text-green-600 opacity-70">
+                      ...외 {chapters.length - 5}개
+                    </li>
+                  )}
+                </ul>
+              </div>
+            )}
+
+            <div className="flex justify-between pt-2">
+              <Button variant="outline" onClick={() => router.back()}>
+                이전
+              </Button>
+              {bookId ? (
+                <Button onClick={handleConfirm} size="lg">
+                  확인 →
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleUpload}
+                  disabled={!file || uploading}
+                  isLoading={uploading}
+                  size="lg"
+                >
+                  업로드
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default function UploadPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <Spinner size="lg" />
+        </div>
+      }
+    >
+      <UploadContent />
+    </Suspense>
+  );
+}
