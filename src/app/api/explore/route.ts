@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
   const query = searchParams.get("q") ?? "";
   const language = searchParams.get("language") ?? "";
   const sort = searchParams.get("sort") ?? "newest";
+  const priceRange = searchParams.get("priceRange") ?? "";
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
   const perPage = Math.min(
     48,
@@ -23,7 +24,7 @@ export async function GET(request: NextRequest) {
       id, title, description, cover_image_url, language,
       status, visibility, total_chapters, total_words,
       published_at, created_at, updated_at, owner_id,
-      source_type, source_file_url,
+      source_type, source_file_url, price,
       user_profiles!owner_id ( display_name )
     `,
       { count: "exact" },
@@ -41,11 +42,25 @@ export async function GET(request: NextRequest) {
     dbQuery = dbQuery.eq("language", language);
   }
 
+  if (priceRange === "free") {
+    dbQuery = dbQuery.eq("price", 0);
+  } else if (priceRange === "0-5000") {
+    dbQuery = dbQuery.gt("price", 0).lte("price", 5000);
+  } else if (priceRange === "5000-10000") {
+    dbQuery = dbQuery.gt("price", 5000).lte("price", 10000);
+  } else if (priceRange === "10000+") {
+    dbQuery = dbQuery.gt("price", 10000);
+  }
+
   // Sorting
   if (sort === "title") {
     dbQuery = dbQuery.order("title", { ascending: true });
   } else if (sort === "popular") {
     dbQuery = dbQuery.order("total_words", { ascending: false });
+  } else if (sort === "price_asc") {
+    dbQuery = dbQuery.order("price", { ascending: true });
+  } else if (sort === "price_desc") {
+    dbQuery = dbQuery.order("price", { ascending: false });
   } else {
     // newest
     dbQuery = dbQuery.order("published_at", { ascending: false });

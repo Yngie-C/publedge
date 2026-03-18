@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
     description?: string;
     language?: string;
     source_type?: SourceType;
+    price?: number;
   };
   try {
     body = await request.json();
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
     return apiError("Invalid JSON body", "VALIDATION_ERROR", 400);
   }
 
-  const { title, description, language, source_type } = body;
+  const { title, description, language, source_type, price } = body;
   if (!title || typeof title !== "string" || title.trim() === "") {
     return apiError("title is required", "VALIDATION_ERROR", 400);
   }
@@ -66,6 +67,7 @@ export async function POST(request: NextRequest) {
       source_type,
       status: "draft",
       visibility: "private",
+      price: typeof price === "number" && price >= 0 ? price : 0,
     })
     .select()
     .single();

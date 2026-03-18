@@ -32,6 +32,8 @@ export interface Book {
   total_chapters: number;
   total_words: number;
   published_at: string | null;
+  price: number;
+  is_free: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -168,4 +170,51 @@ export interface TOCItem {
   title: string;
   slug: string;
   order_index: number;
+}
+
+// --- Purchase ---
+export type PurchaseStatus = "pending" | "completed" | "refunded" | "failed";
+
+export interface Purchase {
+  id: string;
+  user_id: string;
+  book_id: string;
+  price_paid: number;
+  payment_method: string | null;
+  status: PurchaseStatus;
+  purchased_at: string;
+  created_at: string;
+}
+
+// --- Payment Transaction ---
+export type PaymentTransactionStatus =
+  | "ready"
+  | "in_progress"
+  | "done"
+  | "canceled"
+  | "partial_canceled"
+  | "aborted"
+  | "expired";
+
+export interface PaymentTransaction {
+  id: string;
+  purchase_id: string | null;
+  user_id: string;
+  book_id: string;
+  toss_payment_key: string | null;
+  toss_order_id: string;
+  amount: number;
+  status: PaymentTransactionStatus;
+  method: string | null;
+  raw_response: Record<string, unknown> | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// --- Access Control ---
+export type AccessReason = "owner" | "purchased" | "free" | "none";
+
+export interface BookAccessResult {
+  hasAccess: boolean;
+  reason: AccessReason;
 }

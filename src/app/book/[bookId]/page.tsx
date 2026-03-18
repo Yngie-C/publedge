@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -19,6 +19,7 @@ import {
   ChevronDown,
   ChevronUp,
   Check,
+  ShoppingCart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -27,7 +28,7 @@ import { cn } from "@/lib/utils";
 import type { Book, Chapter, Audiobook } from "@/types";
 
 interface BookDetailData {
-  book: Book & { author_name?: string | null };
+  book: Book & { author_name?: string | null; price: number; is_free: boolean };
   chapters: Chapter[];
   audiobook: Audiobook | null;
   reviews: Review[];
@@ -146,6 +147,10 @@ export default function BookDetailPage() {
   const [copied, setCopied] = useState(false);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState("");
+  const [accessInfo, setAccessInfo] = useState<{
+    hasAccess: boolean;
+    reason: string;
+  } | null>(null);
 
   const { data, isLoading, isError } = useQuery<BookDetailData>({
     queryKey: ["book-detail", bookId],
@@ -169,6 +174,14 @@ export default function BookDetailPage() {
       queryClient.invalidateQueries({ queryKey: ["book-detail", bookId] });
     },
   });
+
+  useEffect(() => {
+    if (!bookId) return;
+    fetch(`/api/books/${bookId}/access`)
+      .then((r) => r.json())
+      .then((json) => setAccessInfo(json.data))
+      .catch(() => {});
+  }, [bookId]);
 
   const handleShare = async () => {
     const url = window.location.href;
@@ -299,16 +312,81 @@ export default function BookDetailPage() {
             )}
           </div>
 
+          {/* Price display */}
+          {!isOwner && book.price > 0 && (
+            <div className="mb-4">
+              <span className="text-2xl font-bold text-gray-900">
+                {book.price.toLocaleString("ko-KR")}원
+              </span>
+            </div>
+          )}
+          {!isOwner && book.price === 0 && (
+            <div className="mb-4">
+              <span className="rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                무료
+              </span>
+            </div>
+          )}
+
           {/* Action buttons */}
           <div className="flex flex-wrap gap-2">
-            <Button asChild>
-              <Link href={`/reader/${book.id}`} className="flex items-center gap-2">
-                <BookOpen className="h-4 w-4" />
-                읽기
-              </Link>
-            </Button>
+            {/* 소유자 */}
+            {isOwner && (
+              <>
+                <Button asChild>
+                  <Link href={`/reader/${book.id}`} className="flex items-center gap-2">
+                    <BookOpen className="h-4 w-4" />
+                    읽기
+                  </Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href={`/editor/${book.id}`} className="flex items-center gap-2">
+                    <Edit className="h-4 w-4" />
+                    편집
+                  </Link>
+                </Button>
+                <Button
+                  variant={isPublished ? "secondary" : "default"}
+                  isLoading={publishMutation.isPending}
+                  onClick={() => publishMutation.mutate({ publish: !isPublished })}
+                >
+                  {isPublished ? "비공개로 전환" : "발행하기"}
+                </Button>
+              </>
+            )}
 
-            {audiobook && audiobook.status === "completed" && (
+            {/* 비소유자 - 접근 가능 (무료 또는 구매 완료) */}
+            {!isOwner && accessInfo?.hasAccess && (
+              <Button asChild>
+                <Link href={`/reader/${book.id}`} className="flex items-center gap-2">
+                  <BookOpen className="h-4 w-4" />
+                  읽기
+                </Link>
+              </Button>
+            )}
+
+            {/* 비소유자 - 유료 미구매 */}
+            {!isOwner && !accessInfo?.hasAccess && book.price > 0 && (
+              <Button asChild>
+                <Link href={`/payments/checkout/${book.id}`} className="flex items-center gap-2">
+                  <ShoppingCart className="h-4 w-4" />
+                  구매하기
+                </Link>
+              </Button>
+            )}
+
+            {/* 비소유자 - 무료 (accessInfo 로딩 전 fallback) */}
+            {!isOwner && !accessInfo && book.price === 0 && (
+              <Button asChild>
+                <Link href={`/reader/${book.id}`} className="flex items-center gap-2">
+                  <BookOpen className="h-4 w-4" />
+                  읽기
+                </Link>
+              </Button>
+            )}
+
+            {/* 오디오북 */}
+            {audiobook && audiobook.status === "completed" && (isOwner || accessInfo?.hasAccess) && (
               <Button variant="secondary" asChild>
                 <Link href={`/listen/${book.id}`} className="flex items-center gap-2">
                   <Headphones className="h-4 w-4" />
@@ -317,11 +395,8 @@ export default function BookDetailPage() {
               </Button>
             )}
 
-            <Button
-              variant="outline"
-              onClick={handleShare}
-              className="flex items-center gap-2"
-            >
+            {/* 공유 */}
+            <Button variant="outline" onClick={handleShare} className="flex items-center gap-2">
               {copied ? (
                 <>
                   <Check className="h-4 w-4 text-green-600" />
@@ -334,26 +409,6 @@ export default function BookDetailPage() {
                 </>
               )}
             </Button>
-
-            {isOwner && (
-              <>
-                <Button variant="outline" asChild>
-                  <Link href={`/editor/${book.id}`} className="flex items-center gap-2">
-                    <Edit className="h-4 w-4" />
-                    편집
-                  </Link>
-                </Button>
-                <Button
-                  variant={isPublished ? "secondary" : "default"}
-                  isLoading={publishMutation.isPending}
-                  onClick={() =>
-                    publishMutation.mutate({ publish: !isPublished })
-                  }
-                >
-                  {isPublished ? "비공개로 전환" : "발행하기"}
-                </Button>
-              </>
-            )}
           </div>
         </div>
       </div>

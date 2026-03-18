@@ -28,6 +28,7 @@ async function fetchPublicBooks(
   if (filters.query) params.set("q", filters.query);
   if (filters.language) params.set("language", filters.language);
   params.set("sort", filters.sort);
+  if (filters.priceRange) params.set("priceRange", filters.priceRange);
   params.set("page", String(page));
   params.set("per_page", "24");
 
@@ -47,6 +48,7 @@ export default function ExplorePage() {
     query: "",
     language: "",
     sort: "newest",
+    priceRange: "",
   });
   const [page, setPage] = useState(1);
 

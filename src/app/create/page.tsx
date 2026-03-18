@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { PenLine, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Header } from "@/components/layout/Header";
@@ -19,15 +20,82 @@ export default function CreatePage() {
   const [description, setDescription] = useState("");
   const [language, setLanguage] = useState("ko");
   const [error, setError] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+  const [price, setPrice] = useState<number>(0);
 
-  const handleNext = () => {
+  const validate = (): boolean => {
     if (!title.trim()) {
       setError("제목을 입력해주세요.");
-      return;
+      return false;
     }
     setError("");
-    const params = new URLSearchParams({ title, description, language });
+    return true;
+  };
+
+  const handleUpload = () => {
+    if (!validate()) return;
+    const params = new URLSearchParams({ title, description, language, price: String(price) });
     router.push(`/create/upload?${params.toString()}`);
+  };
+
+  const handleDirectWrite = async () => {
+    if (!validate()) return;
+    setIsCreating(true);
+    setError("");
+
+    try {
+      // 1. 책 생성
+      const bookRes = await fetch("/api/books", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title.trim(),
+          description: description.trim() || null,
+          language,
+          source_type: "text",
+          price,
+        }),
+      });
+
+      if (!bookRes.ok) {
+        const json = await bookRes.json();
+        throw new Error(json.error ?? "책 생성에 실패했습니다.");
+      }
+
+      const bookJson = await bookRes.json();
+      const bookId = bookJson.data.id;
+
+      // 2. 빈 챕터 생성 (실패 시 1회 재시도)
+      let chapterCreated = false;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const chapterRes = await fetch("/api/chapters", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            book_id: bookId,
+            title: "챕터 1",
+            content_html: "",
+            content_raw: "",
+            order_index: 0,
+          }),
+        });
+        if (chapterRes.ok) {
+          chapterCreated = true;
+          break;
+        }
+      }
+
+      if (!chapterCreated) {
+        console.warn("챕터 생성 실패 — 에디터에서 수동 추가 가능");
+      }
+
+      // 3. 에디터로 이동
+      router.push(`/create/edit/${bookId}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "오류가 발생했습니다.");
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   return (
@@ -37,7 +105,7 @@ export default function CreatePage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">새 전자책 만들기</h1>
           <p className="mt-2 text-gray-500">
-            전자책의 기본 정보를 입력하고 파일을 업로드하세요.
+            전자책의 기본 정보를 입력하세요.
           </p>
         </div>
 
@@ -85,9 +153,51 @@ export default function CreatePage() {
               </select>
             </div>
 
-            <div className="flex justify-end pt-2">
-              <Button onClick={handleNext} size="lg">
-                다음 →
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-medium text-gray-700">
+                가격 (원)
+              </label>
+              <div className="relative">
+                <input
+                  type="number"
+                  min="0"
+                  step="100"
+                  value={price}
+                  onChange={(e) => setPrice(Math.max(0, parseInt(e.target.value) || 0))}
+                  placeholder="0"
+                  className="h-10 w-full rounded-lg border border-gray-300 bg-white px-3 pr-10 text-sm text-gray-900 focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">
+                  원
+                </span>
+              </div>
+              <p className="text-xs text-gray-400">
+                {price === 0
+                  ? "무료로 공개됩니다"
+                  : `판매 가격: ${price.toLocaleString("ko-KR")}원`}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 pt-4">
+              <Button
+                onClick={handleDirectWrite}
+                isLoading={isCreating}
+                disabled={isCreating}
+                size="lg"
+                className="flex items-center justify-center gap-2"
+              >
+                <PenLine className="h-4 w-4" />
+                직접 작성하기
+              </Button>
+              <Button
+                onClick={handleUpload}
+                disabled={isCreating}
+                variant="outline"
+                size="lg"
+                className="flex items-center justify-center gap-2"
+              >
+                <Upload className="h-4 w-4" />
+                파일 업로드하기
               </Button>
             </div>
           </div>

@@ -103,6 +103,17 @@ export function BookPreviewCard({ book, className }: BookPreviewCardProps) {
           </p>
         )}
 
+        {/* Price */}
+        <div className="mb-2">
+          {book.price != null && book.price > 0 ? (
+            <span className="text-sm font-bold text-gray-900">
+              {book.price.toLocaleString("ko-KR")}원
+            </span>
+          ) : (
+            <span className="text-sm font-medium text-green-600">무료</span>
+          )}
+        </div>
+
         {/* Stats */}
         <div className="mt-auto flex items-center gap-3 text-xs text-gray-400">
           <span className="flex items-center gap-1">
