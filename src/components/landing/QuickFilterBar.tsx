@@ -6,8 +6,6 @@ import { motion } from "framer-motion";
 const FILTERS = [
   { label: "전체", href: "/explore" },
   { label: "무료", href: "/explore?priceRange=free" },
-  { label: "한국어", href: "/explore?language=ko" },
-  { label: "English", href: "/explore?language=en" },
   { label: "최신순", href: "/explore?sort=newest" },
   { label: "인기순", href: "/explore?sort=popular" },
 ];

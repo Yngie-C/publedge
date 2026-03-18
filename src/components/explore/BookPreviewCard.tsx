@@ -15,12 +15,6 @@ interface BookPreviewCardProps {
   className?: string;
 }
 
-const LANGUAGE_LABELS: Record<string, string> = {
-  ko: "한국어",
-  en: "English",
-  ja: "日本語",
-  zh: "中文",
-};
 
 const GRADIENT_COLORS = [
   "from-blue-400 to-indigo-600",
@@ -48,7 +42,6 @@ function estimatedReadingTime(words: number): number {
 export function BookPreviewCard({ book, className }: BookPreviewCardProps) {
   const gradient = getGradient(book.title);
   const readingMinutes = estimatedReadingTime(book.total_words);
-  const langLabel = LANGUAGE_LABELS[book.language] ?? book.language;
 
   return (
     <Link
@@ -81,12 +74,6 @@ export function BookPreviewCard({ book, className }: BookPreviewCardProps) {
             </span>
           </div>
         )}
-        {/* Language badge */}
-        <div className="absolute top-2 right-2">
-          <span className="rounded-full bg-black/60 px-2 py-0.5 text-xs font-medium text-white backdrop-blur-sm">
-            {langLabel}
-          </span>
-        </div>
       </div>
 
       {/* Content */}

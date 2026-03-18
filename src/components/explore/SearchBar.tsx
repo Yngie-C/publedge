@@ -19,13 +19,7 @@ interface SearchBarProps {
   className?: string;
 }
 
-const LANGUAGES = [
-  { value: "", label: "모든 언어" },
-  { value: "ko", label: "한국어" },
-  { value: "en", label: "English" },
-  { value: "ja", label: "日本語" },
-  { value: "zh", label: "中文" },
-];
+const LANGUAGES: { value: string; label: string }[] = [];
 
 const SORT_OPTIONS: { value: SortOrder; label: string }[] = [
   { value: "newest", label: "최신순" },
@@ -117,29 +111,6 @@ export function SearchBar({ filters, onFiltersChange, className }: SearchBarProp
       {/* Filter row */}
       {showFilters && (
         <div className="flex flex-wrap gap-3 rounded-lg border border-gray-200 bg-white p-3">
-          {/* Language filter */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-gray-500">언어</span>
-            <div className="flex gap-1">
-              {LANGUAGES.map((lang) => (
-                <button
-                  key={lang.value}
-                  onClick={() => handleLanguageChange(lang.value)}
-                  className={cn(
-                    "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
-                    filters.language === lang.value
-                      ? "bg-gray-900 text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200",
-                  )}
-                >
-                  {lang.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="h-auto w-px bg-gray-200 hidden sm:block" />
-
           {/* Sort filter */}
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium text-gray-500">정렬</span>
