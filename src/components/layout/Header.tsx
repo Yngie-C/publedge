@@ -41,7 +41,7 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 font-bold text-gray-900">
-          <BookOpen className="h-6 w-6 text-gray-900" />
+          <BookOpen className="h-6 w-6 text-brand-600" />
           <span className="text-lg">Publedge</span>
         </Link>
 

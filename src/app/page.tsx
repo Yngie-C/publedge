@@ -61,7 +61,7 @@ export default function LandingPage() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="flex flex-col items-center gap-6 max-w-3xl"
         >
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-900 shadow-lg">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-600 shadow-lg">
             <BookOpen className="h-8 w-8 text-white" />
           </div>
 
