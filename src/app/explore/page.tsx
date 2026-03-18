@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { BookGrid } from "@/components/explore/BookGrid";
 import { SearchBar, type SearchFilters } from "@/components/explore/SearchBar";
@@ -44,12 +45,28 @@ async function fetchPublicBooks(
 const PER_PAGE = 24;
 
 export default function ExplorePage() {
-  const [filters, setFilters] = useState<SearchFilters>({
-    query: "",
-    language: "",
-    sort: "newest",
-    priceRange: "",
-  });
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center py-24">
+          <Spinner size="lg" />
+        </div>
+      }
+    >
+      <ExploreContent />
+    </Suspense>
+  );
+}
+
+function ExploreContent() {
+  const searchParams = useSearchParams();
+
+  const [filters, setFilters] = useState<SearchFilters>(() => ({
+    query: searchParams.get("q") ?? "",
+    language: searchParams.get("language") ?? "",
+    sort: (searchParams.get("sort") as SearchFilters["sort"]) ?? "newest",
+    priceRange: searchParams.get("priceRange") ?? "",
+  }));
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError } = useQuery({

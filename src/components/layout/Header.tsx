@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BookOpen, PlusCircle, Menu, X, User, LogOut, Settings } from "lucide-react";
+import { BookOpen, PlusCircle, Menu, X, User, LogOut, Settings, Search, Compass } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +16,8 @@ import {
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
   const user = useAuthStore((s) => s.user);
   const profile = useAuthStore((s) => s.profile);
@@ -24,6 +26,16 @@ export function Header() {
   const handleSignOut = async () => {
     await signOut();
     router.push("/");
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/explore?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      setSearchOpen(false);
+      setMobileOpen(false);
+    }
   };
 
   return (
@@ -37,6 +49,13 @@ export function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden items-center gap-6 md:flex">
+          <Link
+            href="/explore"
+            className="flex items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+          >
+            <Compass className="h-4 w-4" />
+            탐색
+          </Link>
           {user && (
             <>
               <Link
@@ -55,6 +74,21 @@ export function Header() {
             </>
           )}
         </nav>
+
+        {/* Desktop Search Bar */}
+        <form
+          onSubmit={handleSearch}
+          className="hidden md:flex items-center relative w-64 lg:w-80"
+        >
+          <Search className="absolute left-3 h-4 w-4 text-gray-400 pointer-events-none" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="전자책 검색..."
+            className="w-full rounded-full border border-gray-200 bg-gray-50 pl-9 pr-4 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+          />
+        </form>
 
         {/* Desktop Auth */}
         <div className="hidden items-center gap-3 md:flex">
@@ -101,20 +135,54 @@ export function Header() {
           )}
         </div>
 
-        {/* Mobile hamburger */}
-        <button
-          className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        {/* Mobile controls */}
+        <div className="flex items-center gap-1 md:hidden">
+          <button
+            className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
+            onClick={() => { setSearchOpen(!searchOpen); setMobileOpen(false); }}
+            aria-label="Toggle search"
+          >
+            {searchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
+          </button>
+          <button
+            className="rounded-lg p-2 text-gray-600 hover:bg-gray-100"
+            onClick={() => { setMobileOpen(!mobileOpen); setSearchOpen(false); }}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Search Bar */}
+      {searchOpen && (
+        <div className="border-t border-gray-200 bg-white px-4 py-3 md:hidden">
+          <form onSubmit={handleSearch} className="flex items-center relative">
+            <Search className="absolute left-3 h-4 w-4 text-gray-400 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="전자책 검색..."
+              autoFocus
+              className="w-full rounded-full border border-gray-200 bg-gray-50 pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
+            />
+          </form>
+        </div>
+      )}
 
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className="border-t border-gray-200 bg-white px-4 py-4 md:hidden">
           <nav className="flex flex-col gap-3">
+            <Link
+              href="/explore"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Compass className="h-4 w-4" />
+              탐색
+            </Link>
             {user ? (
               <>
                 <Link
