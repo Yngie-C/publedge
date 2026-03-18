@@ -33,23 +33,37 @@ interface ReviewWithBook {
 }
 
 const BOOK_SELECT =
-  "id, title, description, cover_image_url, language, status, visibility, total_chapters, total_words, published_at, price, owner_id, user_profiles!owner_id(display_name)";
+  "id, title, description, cover_image_url, language, status, visibility, total_chapters, total_words, published_at, price, owner_id";
 
-function flattenBookAuthor(b: Record<string, unknown>): BookWithAuthor {
-  const profiles = b.user_profiles as
-    | { display_name: string | null }
-    | { display_name: string | null }[]
-    | null;
-  const authorName = Array.isArray(profiles)
-    ? (profiles[0]?.display_name ?? null)
-    : (profiles?.display_name ?? null);
-  const { user_profiles: _profiles, ...rest } = b;
+async function fetchAuthorMap(
+  admin: ReturnType<typeof createAdminClient>,
+  books: Record<string, unknown>[],
+): Promise<Map<string, string | null>> {
+  const ownerIds = [...new Set(books.map((b) => b.owner_id as string))];
+  const map = new Map<string, string | null>();
+  if (ownerIds.length === 0) return map;
+
+  const { data: profiles } = await admin
+    .from("user_profiles")
+    .select("user_id, display_name")
+    .in("user_id", ownerIds);
+
+  for (const p of (profiles ?? [])) {
+    map.set(p.user_id as string, p.display_name as string | null);
+  }
+  return map;
+}
+
+function toBookWithAuthor(
+  b: Record<string, unknown>,
+  authorMap: Map<string, string | null>,
+): BookWithAuthor {
   return {
-    ...(rest as Omit<BookWithAuthor, "author_name">),
-    author_name: authorName,
-    language: (rest.language as string | null) ?? "ko",
-    total_chapters: (rest.total_chapters as number | null) ?? 0,
-    total_words: (rest.total_words as number | null) ?? 0,
+    ...(b as Omit<BookWithAuthor, "author_name">),
+    author_name: authorMap.get(b.owner_id as string) ?? null,
+    language: (b.language as string | null) ?? "ko",
+    total_chapters: (b.total_chapters as number | null) ?? 0,
+    total_words: (b.total_words as number | null) ?? 0,
   };
 }
 
@@ -88,9 +102,7 @@ export async function GET(): Promise<NextResponse> {
       // 4. Recent reviews
       admin
         .from("reviews")
-        .select(
-          "id, rating, title, content, created_at, user_profiles:user_id(display_name, avatar_url), books:book_id(id, title)",
-        )
+        .select("id, user_id, book_id, rating, title, content, created_at")
         .order("created_at", { ascending: false })
         .limit(4),
       // 5a. Total published books count
@@ -109,20 +121,24 @@ export async function GET(): Promise<NextResponse> {
       admin.from("reviews").select("id", { count: "exact", head: true }),
     ]);
 
+    // --- Collect all books for batch author lookup ---
+    const allRawBooks: Record<string, unknown>[] = [
+      ...((newestResult.data ?? []) as Record<string, unknown>[]),
+      ...((freeResult.data ?? []) as Record<string, unknown>[]),
+    ];
+
     // --- Featured: derive from purchase counts ---
-    let featured: BookWithAuthor[] = [];
+    let featuredRaw: Record<string, unknown>[] = [];
     {
       const purchases = purchasesResult.data ?? [];
-      let topBookIds: string[] = [];
 
       if (purchases.length > 0) {
-        // Count per book_id
         const countMap: Record<string, number> = {};
         for (const p of purchases) {
           const bid = p.book_id as string;
           countMap[bid] = (countMap[bid] ?? 0) + 1;
         }
-        topBookIds = Object.entries(countMap)
+        const topBookIds = Object.entries(countMap)
           .sort((a, b) => b[1] - a[1])
           .slice(0, 8)
           .map(([id]) => id);
@@ -134,11 +150,8 @@ export async function GET(): Promise<NextResponse> {
           .eq("status", "published")
           .eq("visibility", "public");
 
-        featured = (featuredData ?? []).map((b) =>
-          flattenBookAuthor(b as Record<string, unknown>),
-        );
+        featuredRaw = (featuredData ?? []) as Record<string, unknown>[];
       } else {
-        // Fallback: top 8 by total_words DESC
         const { data: fallbackData } = await admin
           .from("books")
           .select(BOOK_SELECT)
@@ -147,49 +160,65 @@ export async function GET(): Promise<NextResponse> {
           .order("total_words", { ascending: false })
           .limit(8);
 
-        featured = (fallbackData ?? []).map((b) =>
-          flattenBookAuthor(b as Record<string, unknown>),
-        );
+        featuredRaw = (fallbackData ?? []) as Record<string, unknown>[];
       }
     }
+    allRawBooks.push(...featuredRaw);
 
-    // --- Newest ---
-    const newest: BookWithAuthor[] = (newestResult.data ?? []).map((b) =>
-      flattenBookAuthor(b as Record<string, unknown>),
+    // --- Batch fetch author names ---
+    const authorMap = await fetchAuthorMap(admin, allRawBooks);
+
+    // --- Map to BookWithAuthor ---
+    const featured = featuredRaw.map((b) => toBookWithAuthor(b, authorMap));
+    const newest = ((newestResult.data ?? []) as Record<string, unknown>[]).map(
+      (b) => toBookWithAuthor(b, authorMap),
+    );
+    const free = ((freeResult.data ?? []) as Record<string, unknown>[]).map(
+      (b) => toBookWithAuthor(b, authorMap),
     );
 
-    // --- Free ---
-    const free: BookWithAuthor[] = (freeResult.data ?? []).map((b) =>
-      flattenBookAuthor(b as Record<string, unknown>),
-    );
+    // --- Recent reviews: fetch user profiles and book titles separately ---
+    const rawReviews = (reviewsResult.data ?? []) as Record<string, unknown>[];
+    let recentReviews: ReviewWithBook[] = [];
 
-    // --- Recent reviews ---
-    const recentReviews: ReviewWithBook[] = (reviewsResult.data ?? []).map((r) => {
-      const raw = r as Record<string, unknown>;
-      const userProfiles = raw.user_profiles as
-        | { display_name: string | null; avatar_url: string | null }
-        | { display_name: string | null; avatar_url: string | null }[]
-        | null;
-      const bookInfo = raw.books as
-        | { id: string; title: string }
-        | { id: string; title: string }[]
-        | null;
+    if (rawReviews.length > 0) {
+      const reviewUserIds = [...new Set(rawReviews.map((r) => r.user_id as string))];
+      const reviewBookIds = [...new Set(rawReviews.map((r) => r.book_id as string))];
 
-      const profile = Array.isArray(userProfiles) ? userProfiles[0] : userProfiles;
-      const book = Array.isArray(bookInfo) ? bookInfo[0] : bookInfo;
+      const [reviewProfiles, reviewBooks] = await Promise.all([
+        admin.from("user_profiles").select("user_id, display_name, avatar_url").in("user_id", reviewUserIds),
+        admin.from("books").select("id, title").in("id", reviewBookIds),
+      ]);
 
-      return {
-        id: raw.id as string,
-        rating: raw.rating as number,
-        title: raw.title as string | null,
-        content: raw.content as string | null,
-        created_at: raw.created_at as string,
-        book_title: book?.title ?? "",
-        book_id: book?.id ?? "",
-        user_name: profile?.display_name ?? "익명",
-        avatar_url: profile?.avatar_url ?? null,
-      };
-    });
+      const profileMap = new Map<string, { display_name: string | null; avatar_url: string | null }>();
+      for (const p of (reviewProfiles.data ?? [])) {
+        profileMap.set(p.user_id as string, {
+          display_name: p.display_name as string | null,
+          avatar_url: p.avatar_url as string | null,
+        });
+      }
+
+      const bookMap = new Map<string, { id: string; title: string }>();
+      for (const b of (reviewBooks.data ?? [])) {
+        bookMap.set(b.id as string, { id: b.id as string, title: b.title as string });
+      }
+
+      recentReviews = rawReviews.map((r) => {
+        const profile = profileMap.get(r.user_id as string);
+        const book = bookMap.get(r.book_id as string);
+        return {
+          id: r.id as string,
+          rating: r.rating as number,
+          title: r.title as string | null,
+          content: r.content as string | null,
+          created_at: r.created_at as string,
+          book_title: book?.title ?? "",
+          book_id: book?.id ?? "",
+          user_name: profile?.display_name ?? "익명",
+          avatar_url: profile?.avatar_url ?? null,
+        };
+      });
+    }
 
     // --- Stats ---
     const totalBooks = totalBooksResult.count ?? 0;

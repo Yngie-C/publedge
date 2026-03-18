@@ -20,13 +20,10 @@ export async function GET(request: NextRequest) {
   let dbQuery = supabase
     .from("books")
     .select(
-      `
-      id, title, description, cover_image_url, language,
+      `id, title, description, cover_image_url, language,
       status, visibility, total_chapters, total_words,
       published_at, created_at, updated_at, owner_id,
-      source_type, source_file_url, price,
-      user_profiles!owner_id ( display_name )
-    `,
+      source_type, source_file_url, price`,
       { count: "exact" },
     )
     .eq("status", "published")
@@ -72,19 +69,25 @@ export async function GET(request: NextRequest) {
 
   if (error) return apiError(error.message, "SERVER_ERROR", 500);
 
-  // Flatten author name from joined user_profiles
-  const books = (data ?? []).map((b) => {
-    const profiles = b.user_profiles as
-      | { display_name: string | null }
-      | { display_name: string | null }[]
-      | null;
-    const authorName = Array.isArray(profiles)
-      ? profiles[0]?.display_name ?? null
-      : profiles?.display_name ?? null;
+  // Fetch author names separately (no direct FK between books and user_profiles)
+  const ownerIds = [...new Set((data ?? []).map((b) => b.owner_id as string))];
+  const authorMap = new Map<string, string | null>();
 
-    const { user_profiles: _profiles, ...rest } = b;
-    return { ...rest, author_name: authorName };
-  });
+  if (ownerIds.length > 0) {
+    const { data: profiles } = await supabase
+      .from("user_profiles")
+      .select("user_id, display_name")
+      .in("user_id", ownerIds);
+
+    for (const p of profiles ?? []) {
+      authorMap.set(p.user_id as string, p.display_name as string | null);
+    }
+  }
+
+  const books = (data ?? []).map((b) => ({
+    ...b,
+    author_name: authorMap.get(b.owner_id as string) ?? null,
+  }));
 
   return apiSuccess({
     books,
