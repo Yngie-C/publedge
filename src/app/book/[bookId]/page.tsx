@@ -281,7 +281,9 @@ export default function BookDetailPage() {
           </h1>
 
           {book.author_name && (
-            <p className="mb-3 text-sm text-gray-500">by {book.author_name}</p>
+            <Link href={`/author/${book.owner_id}`} className="mb-3 inline-block text-sm text-gray-500 hover:text-gray-900 hover:underline">
+              by {book.author_name}
+            </Link>
           )}
 
           {book.description && (
@@ -554,7 +556,83 @@ export default function BookDetailPage() {
             </p>
           )}
         </section>
+
+        {/* Other books by this author */}
+        <OtherBooksByAuthor currentBookId={book.id} authorId={book.owner_id} />
       </div>
     </div>
+  );
+}
+
+function OtherBooksByAuthor({
+  currentBookId,
+  authorId,
+}: {
+  currentBookId: string;
+  authorId: string;
+}) {
+  const { data: books } = useQuery<{ id: string; title: string; cover_image_url: string | null }[]>({
+    queryKey: ["author-other-books", authorId, currentBookId],
+    queryFn: async () => {
+      const res = await fetch(
+        `/api/explore?author_id=${encodeURIComponent(authorId)}&per_page=4`,
+      );
+      if (!res.ok) return [];
+      const json = await res.json();
+      const all: { id: string; title: string; cover_image_url: string | null }[] =
+        json.data?.books ?? [];
+      return all.filter((b) => b.id !== currentBookId);
+    },
+    staleTime: 60_000,
+  });
+
+  if (!books || books.length === 0) return null;
+
+  return (
+    <section>
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">
+        이 저자의 다른 책
+      </h2>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {books.map((b) => {
+          const gradient = getGradient(b.title);
+          return (
+            <Link
+              key={b.id}
+              href={`/book/${b.id}`}
+              className="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+            >
+              <div className="relative aspect-[3/4] w-full overflow-hidden">
+                {b.cover_image_url ? (
+                  <Image
+                    src={b.cover_image_url}
+                    alt={b.title}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 640px) 50vw, 25vw"
+                  />
+                ) : (
+                  <div
+                    className={cn(
+                      "flex h-full w-full items-center justify-center bg-gradient-to-br",
+                      gradient,
+                    )}
+                  >
+                    <span className="text-4xl font-bold text-white/80 select-none">
+                      {b.title.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div className="p-3">
+                <p className="line-clamp-2 text-sm font-medium text-gray-900 group-hover:text-gray-700">
+                  {b.title}
+                </p>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
   );
 }

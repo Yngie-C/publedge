@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import Image from "next/image";
 import { BookGrid } from "@/components/explore/BookGrid";
 import { SearchBar, type SearchFilters } from "@/components/explore/SearchBar";
 import { Spinner } from "@/components/ui/spinner";
@@ -9,6 +11,7 @@ import type { Book } from "@/types";
 
 interface BookWithAuthor extends Book {
   author_name?: string | null;
+  owner_id: string;
 }
 
 interface ExploreApiResponse {
@@ -18,6 +21,21 @@ interface ExploreApiResponse {
     page: number;
     per_page: number;
   };
+}
+
+const GRADIENT_COLORS = [
+  "from-blue-400 to-indigo-600",
+  "from-purple-400 to-pink-600",
+  "from-green-400 to-teal-600",
+  "from-orange-400 to-red-600",
+];
+
+function getGradient(title: string): string {
+  let hash = 0;
+  for (let i = 0; i < title.length; i++) {
+    hash = (hash * 31 + title.charCodeAt(i)) & 0xffffffff;
+  }
+  return GRADIENT_COLORS[Math.abs(hash) % GRADIENT_COLORS.length];
 }
 
 async function fetchPublicBooks(
@@ -41,7 +59,92 @@ async function fetchPublicBooks(
   };
 }
 
+async function fetchPopularBooks(): Promise<BookWithAuthor[]> {
+  const res = await fetch("/api/explore?sort=popular&per_page=6");
+  if (!res.ok) return [];
+  const json: ExploreApiResponse = await res.json();
+  return json.data.books ?? [];
+}
+
 const PER_PAGE = 24;
+
+function PopularBooksSection() {
+  const { data: books, isLoading } = useQuery({
+    queryKey: ["explore-popular"],
+    queryFn: fetchPopularBooks,
+    staleTime: 60_000,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="mb-10">
+        <h2 className="mb-4 text-lg font-semibold text-gray-900">인기 책</h2>
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="flex-shrink-0 w-36 h-56 rounded-xl bg-gray-100 animate-pulse"
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!books || books.length === 0) return null;
+
+  return (
+    <div className="mb-10">
+      <h2 className="mb-4 text-lg font-semibold text-gray-900">인기 책</h2>
+      <div className="flex gap-4 overflow-x-auto pb-2">
+        {books.map((book) => {
+          const gradient = getGradient(book.title);
+          return (
+            <Link
+              key={book.id}
+              href={`/book/${book.id}`}
+              className="group flex-shrink-0 w-36 flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+            >
+              <div className="relative h-48 w-full overflow-hidden">
+                {book.cover_image_url ? (
+                  <Image
+                    src={book.cover_image_url}
+                    alt={book.title}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="144px"
+                  />
+                ) : (
+                  <div
+                    className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${gradient}`}
+                  >
+                    <span className="text-3xl font-bold text-white/80 select-none">
+                      {book.title.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div className="p-2">
+                <p className="line-clamp-2 text-xs font-medium text-gray-900 group-hover:text-gray-700">
+                  {book.title}
+                </p>
+                {book.author_name && (
+                  <Link
+                    href={`/author/${book.owner_id}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="mt-0.5 block text-xs text-gray-400 hover:text-gray-700 hover:underline truncate"
+                  >
+                    {book.author_name}
+                  </Link>
+                )}
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function ExplorePage() {
   const [filters, setFilters] = useState<SearchFilters>({
@@ -78,6 +181,9 @@ export default function ExplorePage() {
           다양한 전자책을 발견하고 읽어보세요
         </p>
       </div>
+
+      {/* Popular books */}
+      <PopularBooksSection />
 
       {/* Search & filters */}
       <div className="mb-8">

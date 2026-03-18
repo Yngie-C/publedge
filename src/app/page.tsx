@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { BookOpen, Headphones, Monitor, ArrowRight, PlusCircle } from "lucide-react";
+import { BookOpen, Headphones, Monitor, ArrowRight, PlusCircle, Search } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/layout/Header";
@@ -27,6 +27,12 @@ const features = [
     title: "웹 리더",
     description:
       "어디서든 브라우저로 전자책을 읽으세요. 북마크, 하이라이트, 읽기 설정을 지원합니다.",
+  },
+  {
+    icon: Search,
+    title: "전자책 탐색",
+    description:
+      "다양한 전자책을 발견하고, 저자를 팔로우하고, 리뷰를 남겨보세요.",
   },
 ];
 
@@ -64,16 +70,15 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-xl text-gray-500 max-w-xl leading-relaxed">
-            당신의 글을 전자책으로 만들고, 오디오북으로 변환하고, 웹에서
-            바로 읽으세요. 출판의 모든 것을 한 곳에서.
+            읽고, 만들고, 공유하세요. 전자책의 모든 것을 한 곳에서.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             {user ? (
               <>
                 <Button size="lg" asChild>
-                  <Link href="/dashboard" className="flex items-center gap-2">
-                    내 서재 보기
+                  <Link href="/explore" className="flex items-center gap-2">
+                    탐색하기
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
@@ -84,13 +89,13 @@ export default function LandingPage() {
             ) : (
               <>
                 <Button size="lg" asChild>
-                  <Link href="/auth/signup" className="flex items-center gap-2">
-                    무료로 시작하기
+                  <Link href="/explore" className="flex items-center gap-2">
+                    둘러보기
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <Link href="/auth/login">로그인</Link>
+                  <Link href="/auth/signup">시작하기</Link>
                 </Button>
               </>
             )}
@@ -121,7 +126,7 @@ export default function LandingPage() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid gap-6 sm:grid-cols-3"
+            className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
           >
             {features.map(({ icon: Icon, title, description }) => (
               <motion.div

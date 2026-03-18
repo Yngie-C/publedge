@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
   const language = searchParams.get("language") ?? "";
   const sort = searchParams.get("sort") ?? "newest";
   const priceRange = searchParams.get("priceRange") ?? "";
+  const authorId = searchParams.get("author_id") ?? "";
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
   const perPage = Math.min(
     48,
@@ -31,6 +32,10 @@ export async function GET(request: NextRequest) {
     )
     .eq("status", "published")
     .eq("visibility", "public");
+
+  if (authorId) {
+    dbQuery = dbQuery.eq("owner_id", authorId);
+  }
 
   if (query.trim()) {
     dbQuery = dbQuery.or(

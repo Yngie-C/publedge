@@ -3,7 +3,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BookOpen, PlusCircle, Menu, X, User, LogOut, Settings } from "lucide-react";
+import {
+  BookOpen,
+  Search,
+  Library,
+  Pen,
+  Menu,
+  X,
+  LogOut,
+  Settings,
+  ShoppingBag,
+} from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,20 +47,28 @@ export function Header() {
 
         {/* Desktop Nav */}
         <nav className="hidden items-center gap-6 md:flex">
+          <Link
+            href="/explore"
+            className="flex items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+          >
+            <Search className="h-4 w-4" />
+            탐색
+          </Link>
           {user && (
             <>
               <Link
-                href="/dashboard"
-                className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+                href="/my/library"
+                className="flex items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
               >
+                <Library className="h-4 w-4" />
                 내 서재
               </Link>
               <Link
-                href="/create"
+                href="/creator"
                 className="flex items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
               >
-                <PlusCircle className="h-4 w-4" />
-                새 전자책
+                <Pen className="h-4 w-4" />
+                크리에이터 스튜디오
               </Link>
             </>
           )}
@@ -74,7 +92,19 @@ export function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem asChild>
-                  <Link href="/settings" className="flex items-center gap-2">
+                  <Link href="/my/library" className="flex items-center gap-2">
+                    <Library className="h-4 w-4" />
+                    내 서재
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/my/purchases" className="flex items-center gap-2">
+                    <ShoppingBag className="h-4 w-4" />
+                    구매 내역
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/my/settings" className="flex items-center gap-2">
                     <Settings className="h-4 w-4" />
                     설정
                   </Link>
@@ -115,26 +145,34 @@ export function Header() {
       {mobileOpen && (
         <div className="border-t border-gray-200 bg-white px-4 py-4 md:hidden">
           <nav className="flex flex-col gap-3">
+            <Link
+              href="/explore"
+              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Search className="h-4 w-4" />
+              탐색
+            </Link>
             {user ? (
               <>
                 <Link
-                  href="/dashboard"
+                  href="/my/library"
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                   onClick={() => setMobileOpen(false)}
                 >
-                  <BookOpen className="h-4 w-4" />
+                  <Library className="h-4 w-4" />
                   내 서재
                 </Link>
                 <Link
-                  href="/create"
+                  href="/creator"
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                   onClick={() => setMobileOpen(false)}
                 >
-                  <PlusCircle className="h-4 w-4" />
-                  새 전자책
+                  <Pen className="h-4 w-4" />
+                  크리에이터 스튜디오
                 </Link>
                 <Link
-                  href="/settings"
+                  href="/my/settings"
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                   onClick={() => setMobileOpen(false)}
                 >
