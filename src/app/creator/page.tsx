@@ -56,7 +56,7 @@ export default function CreatorPage() {
   });
 
   const handleDelete = async (id: string) => {
-    if (!confirm("이 전자책을 삭제하시겠습니까?")) return;
+    if (!confirm("이 콘텐츠를 삭제하시겠습니까?")) return;
     await fetch(`/api/books/${id}`, { method: "DELETE" });
     refetch();
   };
@@ -72,7 +72,7 @@ export default function CreatorPage() {
         <Button asChild>
           <Link href="/create" className="flex items-center gap-2">
             <PlusCircle className="h-4 w-4" />
-            새 전자책
+            새 콘텐츠
           </Link>
         </Button>
       </div>
@@ -123,7 +123,7 @@ export default function CreatorPage() {
         </div>
       ) : isError ? (
         <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center text-red-700">
-          책 목록을 불러오지 못했습니다.{" "}
+          콘텐츠 목록을 불러오지 못했습니다.{" "}
           <button onClick={() => refetch()} className="underline">
             다시 시도
           </button>
@@ -132,13 +132,13 @@ export default function CreatorPage() {
         <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-gray-300 bg-white py-20 text-center">
           <BookOpen className="h-16 w-16 text-gray-300" />
           <div>
-            <p className="text-lg font-semibold text-gray-700">아직 전자책이 없습니다</p>
-            <p className="mt-1 text-sm text-gray-400">첫 번째 전자책을 만들어보세요!</p>
+            <p className="text-lg font-semibold text-gray-700">아직 콘텐츠가 없습니다</p>
+            <p className="mt-1 text-sm text-gray-400">첫 번째 콘텐츠를 만들어보세요!</p>
           </div>
           <Button asChild>
             <Link href="/create">
               <PlusCircle className="h-4 w-4 mr-2" />
-              첫 전자책 만들기
+              첫 콘텐츠 만들기
             </Link>
           </Button>
         </div>
