@@ -54,7 +54,7 @@ export function SocialProofSection({ stats, reviews }: SocialProofSectionProps) 
         <div className="mb-12 grid grid-cols-3 gap-4 text-center">
           <div className="p-6">
             <span className="text-3xl font-bold text-gray-900">{stats.totalBooks.toLocaleString("ko-KR")}</span>
-            <p className="mt-1 text-sm text-gray-500">등록된 전자책</p>
+            <p className="mt-1 text-sm text-gray-500">등록된 콘텐츠</p>
           </div>
           <div className="p-6">
             <span className="text-3xl font-bold text-gray-900">{stats.totalAuthors.toLocaleString("ko-KR")}</span>

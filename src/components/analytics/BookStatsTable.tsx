@@ -149,7 +149,7 @@ export function BookStatsTable({ books, className }: BookStatsTableProps) {
           className,
         )}
       >
-        <p className="text-sm text-gray-400">전자책이 없습니다</p>
+        <p className="text-sm text-gray-400">콘텐츠이 없습니다</p>
       </div>
     );
   }

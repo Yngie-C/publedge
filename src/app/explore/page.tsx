@@ -89,10 +89,10 @@ function ExploreContent() {
       {/* Page header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-          전자책 탐색
+          콘텐츠 탐색
         </h1>
         <p className="mt-1 text-sm text-gray-500">
-          다양한 전자책을 발견하고 읽어보세요
+          다양한 콘텐츠을 발견하고 읽어보세요
         </p>
       </div>
 
@@ -104,7 +104,7 @@ function ExploreContent() {
       {/* Results count */}
       {!isLoading && !isError && (
         <div className="mb-4 text-sm text-gray-500">
-          {total > 0 ? `${total.toLocaleString()}개의 전자책` : ""}
+          {total > 0 ? `${total.toLocaleString()}개의 콘텐츠` : ""}
         </div>
       )}
 

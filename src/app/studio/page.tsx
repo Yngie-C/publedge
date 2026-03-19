@@ -59,7 +59,7 @@ export default function StudioPage() {
   });
 
   const handleDelete = async (id: string) => {
-    if (!confirm("이 전자책을 삭제하시겠습니까?")) return;
+    if (!confirm("이 콘텐츠을 삭제하시겠습니까?")) return;
     await fetch(`/api/books/${id}`, { method: "DELETE" });
     refetch();
   };
@@ -74,7 +74,7 @@ export default function StudioPage() {
             <Link href="/analytics">상세 분석</Link>
           </Button>
           <Button asChild>
-            <Link href="/create">새 전자책 만들기</Link>
+            <Link href="/create">새 콘텐츠 만들기</Link>
           </Button>
         </div>
       </div>
@@ -83,7 +83,7 @@ export default function StudioPage() {
       <div className="mb-6 flex gap-1 rounded-lg border border-gray-200 bg-white p-1 w-fit">
         {(
           [
-            { key: "books" as Tab, label: "내 전자책" },
+            { key: "books" as Tab, label: "내 콘텐츠" },
             { key: "sales" as Tab, label: "판매 현황" },
           ] as const
         ).map(({ key, label }) => (
@@ -117,9 +117,9 @@ export default function StudioPage() {
             </div>
           ) : books.length === 0 ? (
             <div className="flex flex-col items-center gap-4 py-16 text-gray-500">
-              <p>아직 작성한 전자책이 없습니다.</p>
+              <p>아직 작성한 콘텐츠이 없습니다.</p>
               <Button asChild>
-                <Link href="/create">첫 전자책 만들기</Link>
+                <Link href="/create">첫 콘텐츠 만들기</Link>
               </Button>
             </div>
           ) : (

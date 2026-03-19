@@ -76,7 +76,7 @@ export function Header() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="전자책 검색..."
+            placeholder="콘텐츠 검색..."
             className="w-full rounded-full border border-gray-200 bg-gray-50 pl-9 pr-4 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
           />
         </form>
@@ -159,7 +159,7 @@ export function Header() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="전자책 검색..."
+              placeholder="콘텐츠 검색..."
               autoFocus
               className="w-full rounded-full border border-gray-200 bg-gray-50 pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent"
             />

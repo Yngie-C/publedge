@@ -52,7 +52,7 @@ function UploadContent() {
         setProgress((p) => Math.min(p + 10, 85));
       }, 400);
 
-      const res = await fetch("/api/books/upload", {
+      const res = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
@@ -86,7 +86,7 @@ function UploadContent() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">파일 업로드</h1>
           <p className="mt-2 text-gray-500">
-            &ldquo;{title}&rdquo; 전자책의 원고 파일을 업로드하세요.
+            &ldquo;{title}&rdquo; 콘텐츠의 원고 파일을 업로드하세요.
           </p>
         </div>
 

@@ -26,11 +26,11 @@ export const metadata: Metadata = {
     template: "%s | inspic",
   },
   description:
-    "전자책을 만들고, 읽고, 오디오북으로 변환하세요. inspic와 함께 당신의 이야기를 세상에 공유하세요.",
-  keywords: ["전자책", "오디오북", "글쓰기", "출판", "ebook"],
+    "콘텐츠을 만들고, 읽고, 오디오북으로 변환하세요. inspic와 함께 당신의 이야기를 세상에 공유하세요.",
+  keywords: ["콘텐츠", "오디오북", "글쓰기", "출판", "ebook"],
   openGraph: {
     title: "inspic",
-    description: "전자책 제작 및 출판 플랫폼",
+    description: "콘텐츠 제작 및 출판 플랫폼",
     type: "website",
   },
 };

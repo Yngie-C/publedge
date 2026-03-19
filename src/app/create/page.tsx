@@ -103,9 +103,9 @@ export default function CreatePage() {
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-12 sm:px-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">새 전자책 만들기</h1>
+          <h1 className="text-3xl font-bold text-gray-900">새 콘텐츠 만들기</h1>
           <p className="mt-2 text-gray-500">
-            전자책의 기본 정보를 입력하세요.
+            콘텐츠의 기본 정보를 입력하세요.
           </p>
         </div>
 
@@ -120,7 +120,7 @@ export default function CreatePage() {
             <Input
               label="제목 *"
               type="text"
-              placeholder="전자책 제목을 입력하세요"
+              placeholder="콘텐츠 제목을 입력하세요"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
@@ -130,7 +130,7 @@ export default function CreatePage() {
                 설명 (선택)
               </label>
               <textarea
-                placeholder="전자책에 대한 간단한 설명을 입력하세요"
+                placeholder="콘텐츠에 대한 간단한 설명을 입력하세요"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}

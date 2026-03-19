@@ -78,7 +78,7 @@ export default function LandingPage() {
         ) : data?.featured && data.featured.length > 0 ? (
           <div className="mb-12">
             <BookSection
-              title="인기 전자책"
+              title="인기 콘텐츠"
               moreHref="/explore?sort=popular"
               books={data.featured}
             />
@@ -91,7 +91,7 @@ export default function LandingPage() {
         ) : data?.newest && data.newest.length > 0 ? (
           <div className="mb-12">
             <BookSection
-              title="새로 나온 전자책"
+              title="새로 나온 콘텐츠"
               moreHref="/explore?sort=newest"
               books={data.newest}
             />
@@ -104,7 +104,7 @@ export default function LandingPage() {
         ) : data?.free && data.free.length > 0 ? (
           <div className="mb-12">
             <BookSection
-              title="무료 전자책"
+              title="무료 콘텐츠"
               moreHref="/explore?priceRange=free"
               books={data.free}
             />
@@ -124,10 +124,10 @@ export default function LandingPage() {
       <section className="bg-gray-900 px-4 py-16 text-center sm:px-6">
         <div className="mx-auto max-w-2xl">
           <h2 className="mb-4 text-3xl font-bold text-white">
-            나도 전자책을 출판해보세요
+            나도 콘텐츠을 출판해보세요
           </h2>
           <p className="mb-8 text-gray-400">
-            글을 쓰고, 전자책으로 만들고, 오디오북으로 변환하세요. 무료로 시작할 수 있습니다.
+            글을 쓰고, 콘텐츠으로 만들고, 오디오북으로 변환하세요. 무료로 시작할 수 있습니다.
           </p>
           <Button size="lg" variant="secondary" asChild>
             <Link

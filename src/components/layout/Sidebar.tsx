@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/dashboard", label: "내 서재", icon: LayoutDashboard },
-  { href: "/create", label: "새 전자책", icon: PlusCircle },
+  { href: "/create", label: "새 콘텐츠", icon: PlusCircle },
   { href: "/settings", label: "설정", icon: Settings },
 ];
 

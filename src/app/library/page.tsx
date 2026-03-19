@@ -92,11 +92,11 @@ export default function LibraryPage() {
               아직 구매한 책이 없습니다
             </p>
             <p className="mt-1 text-sm text-gray-400">
-              마음에 드는 전자책을 찾아보세요!
+              마음에 드는 콘텐츠을 찾아보세요!
             </p>
           </div>
           <Button asChild>
-            <Link href="/explore">전자책 둘러보기</Link>
+            <Link href="/explore">콘텐츠 둘러보기</Link>
           </Button>
         </div>
       ) : (

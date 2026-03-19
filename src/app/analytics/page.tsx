@@ -74,7 +74,7 @@ export default function AnalyticsPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">분석 대시보드</h1>
           <p className="mt-1 text-sm text-gray-500">
-            전자책 성과와 독자 현황을 확인하세요
+            콘텐츠 성과와 독자 현황을 확인하세요
           </p>
         </div>
 
@@ -113,7 +113,7 @@ export default function AnalyticsPage() {
           {/* Overview cards */}
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             <StatsCard
-              label="전자책"
+              label="콘텐츠"
               value={data.overview.total_books}
               icon={<BookMarked className="h-5 w-5" />}
             />
@@ -151,7 +151,7 @@ export default function AnalyticsPage() {
           {/* Book stats table */}
           <div>
             <h2 className="mb-4 text-base font-semibold text-gray-900">
-              전자책별 통계
+              콘텐츠별 통계
             </h2>
             <BookStatsTable books={data.books} />
           </div>
