@@ -4,6 +4,17 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand-50: #FFF7F5;
+  --color-brand-100: #FFEDE8;
+  --color-brand-200: #FFD5CC;
+  --color-brand-300: #FFB09E;
+  --color-brand-400: #FF8A70;
+  --color-brand-500: #FF6242;
+  --color-brand-600: #FF5126;
+  --color-brand-700: #E8421B;
+  --color-brand-800: #C43515;
+  --color-brand-900: #9E2B11;
+  --color-brand-950: #5C1809;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-logo: var(--font-playfair);
@@ -13,12 +24,38 @@
 :root {
   --background: #ffffff;
   --foreground: #111111;
+
+  /* Brand Orange Palette */
+  --brand-50: #FFF7F5;
+  --brand-100: #FFEDE8;
+  --brand-200: #FFD5CC;
+  --brand-300: #FFB09E;
+  --brand-400: #FF8A70;
+  --brand-500: #FF6242;
+  --brand-600: #FF5126;
+  --brand-700: #E8421B;
+  --brand-800: #C43515;
+  --brand-900: #9E2B11;
+  --brand-950: #5C1809;
+
+  /* Semantic Tokens */
+  --color-brand-primary: var(--brand-600);
+  --color-brand-primary-hover: var(--brand-700);
+  --color-brand-primary-active: var(--brand-800);
+  --color-brand-primary-light: var(--brand-50);
+  --color-brand-primary-border: var(--brand-200);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+
+    --brand-50: #2A1008;
+    --brand-100: #3D1A0E;
+    --brand-600: #FF6242;
+    --brand-700: #FF5126;
+    --brand-800: #E8421B;
   }
 }
 

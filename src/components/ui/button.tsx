@@ -50,16 +50,26 @@ function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  const Comp = asChild ? Slot : "button";
+  if (asChild) {
+    return (
+      <Slot
+        className={cn(buttonVariants({ variant, size }), className)}
+        {...props}
+      >
+        {children}
+      </Slot>
+    );
+  }
+
   return (
-    <Comp
+    <button
       className={cn(buttonVariants({ variant, size }), className)}
-      disabled={!asChild ? (disabled || isLoading) : undefined}
+      disabled={disabled || isLoading}
       {...props}
     >
       {isLoading && <Spinner size="sm" />}
       {children}
-    </Comp>
+    </button>
   );
 }
 
