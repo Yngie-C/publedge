@@ -131,10 +131,10 @@ export default function LandingPage() {
           </p>
           <Button size="lg" variant="secondary" asChild>
             <Link
-              href={user ? "/create" : "/auth/signup"}
+              href={user ? "/studio" : "/auth/signup"}
               className="flex items-center gap-2"
             >
-              {user ? "새 전자책 만들기" : "무료로 시작하기"}
+              {user ? "크리에이터 스튜디오" : "무료로 시작하기"}
             </Link>
           </Button>
         </div>

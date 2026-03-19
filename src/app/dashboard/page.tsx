@@ -1,237 +1,159 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { PlusCircle, BookOpen, TrendingUp, DollarSign, BarChart3 } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 import { useAuthStore } from "@/stores/auth-store";
-import { BookCard } from "@/components/dashboard/BookCard";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import type { Book } from "@/types";
+import { cn } from "@/lib/utils";
 
-type Tab = "mine" | "reading" | "sales";
-
-interface SalesData {
-  totalRevenue: number;
-  totalSales: number;
-  bookStats: {
-    bookId: string;
+interface PurchasedBook {
+  id: string;
+  book_id: string;
+  price_paid: number;
+  purchased_at: string;
+  books: {
+    id: string;
     title: string;
-    price: number;
-    sales: number;
-    revenue: number;
-  }[];
+    description: string | null;
+    cover_image_url: string | null;
+    language: string;
+    total_chapters: number;
+    total_words: number;
+    author_name?: string | null;
+  };
 }
 
-async function fetchSalesData(): Promise<SalesData> {
-  const res = await fetch("/api/analytics/sales");
-  if (!res.ok) throw new Error("판매 데이터를 불러오지 못했습니다.");
-  const json = await res.json();
-  return json.data;
+const GRADIENT_COLORS = [
+  "from-blue-400 to-indigo-600",
+  "from-purple-400 to-pink-600",
+  "from-green-400 to-teal-600",
+  "from-orange-400 to-red-600",
+  "from-cyan-400 to-blue-600",
+  "from-rose-400 to-pink-600",
+  "from-amber-400 to-orange-600",
+  "from-emerald-400 to-green-600",
+];
+
+function getGradient(title: string): string {
+  let hash = 0;
+  for (let i = 0; i < title.length; i++) {
+    hash = (hash * 31 + title.charCodeAt(i)) & 0xffffffff;
+  }
+  return GRADIENT_COLORS[Math.abs(hash) % GRADIENT_COLORS.length];
 }
 
-async function fetchBooks(): Promise<Book[]> {
-  const res = await fetch("/api/books");
-  if (!res.ok) throw new Error("책 목록을 불러오지 못했습니다.");
+async function fetchPurchases(): Promise<PurchasedBook[]> {
+  const res = await fetch("/api/purchases");
+  if (!res.ok) throw new Error("구매 목록을 불러오지 못했습니다.");
   const json = await res.json();
   return json.data ?? [];
 }
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState<Tab>("mine");
   const user = useAuthStore((s) => s.user);
-
-  const {
-    data: books = [],
-    isLoading,
-    isError,
-    refetch,
-  } = useQuery<Book[]>({
-    queryKey: ["books"],
-    queryFn: fetchBooks,
+  const { data: purchases = [], isLoading, isError, refetch } = useQuery<PurchasedBook[]>({
+    queryKey: ["purchases"],
+    queryFn: fetchPurchases,
     enabled: !!user,
   });
 
-  const {
-    data: salesData,
-    isLoading: salesLoading,
-  } = useQuery<SalesData>({
-    queryKey: ["sales-analytics"],
-    queryFn: fetchSalesData,
-    enabled: !!user && activeTab === "sales",
-  });
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("이 전자책을 삭제하시겠습니까?")) return;
-    await fetch(`/api/books/${id}`, { method: "DELETE" });
-    refetch();
-  };
-
-  const publishedBooks = books.filter((b) => b.status === "published");
-  const displayBooks = activeTab === "mine" ? books : publishedBooks;
-
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      {/* Header row */}
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">내 서재</h1>
-        <Button asChild>
-          <Link href="/create" className="flex items-center gap-2">
-            <PlusCircle className="h-4 w-4" />
-            새 전자책
-          </Link>
+        <Button variant="outline" asChild>
+          <Link href="/explore">더 둘러보기</Link>
         </Button>
       </div>
 
-      {/* Tabs */}
-      <div className="mb-6 flex gap-1 rounded-lg border border-gray-200 bg-white p-1 w-fit">
-        {(
-          [
-            { key: "mine", label: "내 전자책" },
-            { key: "reading", label: "읽는 중" },
-            { key: "sales", label: "판매 현황" },
-          ] as { key: Tab; label: string }[]
-        ).map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => setActiveTab(key)}
-            className={
-              activeTab === key
-                ? "rounded-md bg-gray-900 px-4 py-1.5 text-sm font-medium text-white"
-                : "rounded-md px-4 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100"
-            }
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {/* Content */}
       {isLoading ? (
         <div className="flex justify-center py-20">
           <Spinner size="lg" />
         </div>
       ) : isError ? (
         <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center text-red-700">
-          책 목록을 불러오지 못했습니다.{" "}
+          구매 목록을 불러오지 못했습니다.{" "}
           <button onClick={() => refetch()} className="underline">
             다시 시도
           </button>
         </div>
-      ) : activeTab === "sales" ? (
-        salesLoading ? (
-          <div className="flex justify-center py-20">
-            <Spinner size="lg" />
-          </div>
-        ) : salesData ? (
-          <div className="space-y-6">
-            {/* Summary cards */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-xl border border-gray-200 bg-white p-6">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-lg bg-green-100 p-2">
-                    <DollarSign className="h-5 w-5 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">총 판매액</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {salesData.totalRevenue.toLocaleString("ko-KR")}원
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="rounded-xl border border-gray-200 bg-white p-6">
-                <div className="flex items-center gap-3">
-                  <div className="rounded-lg bg-blue-100 p-2">
-                    <TrendingUp className="h-5 w-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">총 판매 건수</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {salesData.totalSales}건
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Book stats table */}
-            {salesData.bookStats.length > 0 ? (
-              <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
-                <div className="border-b border-gray-100 px-5 py-3">
-                  <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
-                    <BarChart3 className="h-4 w-4 text-gray-400" />
-                    책별 판매 현황
-                  </h3>
-                </div>
-                <div className="divide-y divide-gray-100">
-                  {salesData.bookStats.map((stat) => (
-                    <div
-                      key={stat.bookId}
-                      className="flex items-center justify-between px-5 py-3.5"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-gray-800">
-                          {stat.title}
-                        </p>
-                        <p className="text-xs text-gray-400">
-                          {stat.price.toLocaleString("ko-KR")}원
-                        </p>
-                      </div>
-                      <div className="ml-4 flex items-center gap-6 text-sm">
-                        <div className="text-right">
-                          <p className="font-medium text-gray-700">{stat.sales}건</p>
-                          <p className="text-xs text-gray-400">판매</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium text-gray-900">
-                            {stat.revenue.toLocaleString("ko-KR")}원
-                          </p>
-                          <p className="text-xs text-gray-400">수입</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-xl border border-dashed border-gray-300 bg-white py-12 text-center">
-                <BarChart3 className="mx-auto h-12 w-12 text-gray-300" />
-                <p className="mt-3 text-sm text-gray-500">아직 판매 기록이 없습니다</p>
-              </div>
-            )}
-          </div>
-        ) : null
-      ) : displayBooks.length === 0 ? (
+      ) : purchases.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-gray-300 bg-white py-20 text-center">
-          <BookOpen className="h-16 w-16 text-gray-300" />
           <div>
             <p className="text-lg font-semibold text-gray-700">
-              {activeTab === "mine"
-                ? "아직 전자책이 없습니다"
-                : "읽고 있는 책이 없습니다"}
+              아직 구매한 책이 없습니다
             </p>
             <p className="mt-1 text-sm text-gray-400">
-              {activeTab === "mine"
-                ? "첫 번째 전자책을 만들어보세요!"
-                : "전자책을 출판하면 여기서 읽을 수 있어요."}
+              마음에 드는 전자책을 찾아보세요!
             </p>
           </div>
-          {activeTab === "mine" && (
-            <Button asChild>
-              <Link href="/create">
-                <PlusCircle className="h-4 w-4 mr-2" />
-                첫 전자책 만들기
-              </Link>
-            </Button>
-          )}
+          <Button asChild>
+            <Link href="/explore">전자책 둘러보기</Link>
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {displayBooks.map((book) => (
-            <BookCard key={book.id} book={book} onDelete={handleDelete} />
-          ))}
+          {purchases.map((purchase) => {
+            const book = purchase.books;
+            if (!book) return null;
+            const gradient = getGradient(book.title);
+
+            return (
+              <div
+                key={purchase.id}
+                className="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+              >
+                {/* Cover */}
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
+                  {book.cover_image_url ? (
+                    <Image
+                      src={book.cover_image_url}
+                      alt={book.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                    />
+                  ) : (
+                    <div
+                      className={cn(
+                        "flex h-full w-full items-center justify-center bg-gradient-to-br",
+                        gradient,
+                      )}
+                    >
+                      <span className="text-5xl font-bold text-white/80 select-none">
+                        {book.title.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Info */}
+                <div className="flex flex-1 flex-col p-3">
+                  <h3 className="mb-1 line-clamp-2 text-sm font-semibold text-gray-900">
+                    {book.title}
+                  </h3>
+                  {book.author_name && (
+                    <p className="mb-2 text-xs text-gray-500">{book.author_name}</p>
+                  )}
+                  <p className="mt-auto text-xs text-gray-400">
+                    {new Date(purchase.purchased_at).toLocaleDateString("ko-KR")} 구매
+                  </p>
+
+                  {/* Actions */}
+                  <div className="mt-2 flex gap-1.5">
+                    <Button size="sm" className="flex-1 text-xs" asChild>
+                      <Link href={`/reader/${book.id}`}>읽기</Link>
+                    </Button>
+                    <Button size="sm" variant="outline" className="flex-1 text-xs" asChild>
+                      <Link href={`/listen/${book.id}`}>듣기</Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

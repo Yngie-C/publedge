@@ -63,10 +63,10 @@ export function Header() {
                 내 서재
               </Link>
               <Link
-                href="/create"
-                className="flex items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+                href="/studio"
+                className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
               >
-                새 전자책
+                스튜디오
               </Link>
             </>
           )}
@@ -189,11 +189,11 @@ export function Header() {
                   내 서재
                 </Link>
                 <Link
-                  href="/create"
+                  href="/studio"
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                   onClick={() => setMobileOpen(false)}
                 >
-                  새 전자책
+                  스튜디오
                 </Link>
                 <Link
                   href="/settings"
