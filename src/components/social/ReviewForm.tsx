@@ -70,7 +70,7 @@ export function ReviewForm({
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="이 책에 대한 생각을 자유롭게 작성하세요..."
+          placeholder="이 콘텐츠에 대한 생각을 자유롭게 작성하세요..."
           rows={4}
           maxLength={2000}
           className={cn(

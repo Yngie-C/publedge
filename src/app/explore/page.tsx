@@ -92,7 +92,7 @@ function ExploreContent() {
           콘텐츠 탐색
         </h1>
         <p className="mt-1 text-sm text-gray-500">
-          다양한 콘텐츠을 발견하고 읽어보세요
+          다양한 콘텐츠를 발견하고 읽어보세요
         </p>
       </div>
 

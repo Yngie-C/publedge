@@ -25,7 +25,7 @@ interface SalesData {
 
 async function fetchBooks(): Promise<Book[]> {
   const res = await fetch("/api/books");
-  if (!res.ok) throw new Error("책 목록을 불러오지 못했습니다.");
+  if (!res.ok) throw new Error("콘텐츠 목록을 불러오지 못했습니다.");
   const json = await res.json();
   return json.data ?? [];
 }
@@ -59,7 +59,7 @@ export default function StudioPage() {
   });
 
   const handleDelete = async (id: string) => {
-    if (!confirm("이 콘텐츠을 삭제하시겠습니까?")) return;
+    if (!confirm("이 콘텐츠를 삭제하시겠습니까?")) return;
     await fetch(`/api/books/${id}`, { method: "DELETE" });
     refetch();
   };
@@ -110,14 +110,14 @@ export default function StudioPage() {
             </div>
           ) : isError ? (
             <div className="flex flex-col items-center gap-4 py-16 text-gray-500">
-              <p>책 목록을 불러오지 못했습니다.</p>
+              <p>콘텐츠 목록을 불러오지 못했습니다.</p>
               <Button variant="outline" onClick={() => refetch()}>
                 다시 시도
               </Button>
             </div>
           ) : books.length === 0 ? (
             <div className="flex flex-col items-center gap-4 py-16 text-gray-500">
-              <p>아직 작성한 콘텐츠이 없습니다.</p>
+              <p>아직 작성한 콘텐츠가 없습니다.</p>
               <Button asChild>
                 <Link href="/create">첫 콘텐츠 만들기</Link>
               </Button>
@@ -166,7 +166,7 @@ export default function StudioPage() {
                   <thead className="border-b border-gray-200 bg-gray-50">
                     <tr>
                       <th className="px-4 py-3 text-left font-medium text-gray-600">
-                        책 제목
+                        콘텐츠 제목
                       </th>
                       <th className="px-4 py-3 text-right font-medium text-gray-600">
                         가격

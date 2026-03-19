@@ -144,7 +144,7 @@ export default function EditPage() {
   };
 
   const handlePublish = async () => {
-    if (!confirm("콘텐츠을 출판하시겠습니까? 출판 후에도 수정할 수 있습니다.")) return;
+    if (!confirm("콘텐츠를 출판하시겠습니까? 출판 후에도 수정할 수 있습니다.")) return;
     setPublishing(true);
     try {
       await fetch(`/api/books/${bookId}`, {

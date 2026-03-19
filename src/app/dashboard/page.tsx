@@ -83,10 +83,10 @@ export default function DashboardPage() {
         <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-gray-300 bg-white py-20 text-center">
           <div>
             <p className="text-lg font-semibold text-gray-700">
-              아직 구매한 책이 없습니다
+              아직 구매한 콘텐츠가 없습니다
             </p>
             <p className="mt-1 text-sm text-gray-400">
-              마음에 드는 콘텐츠을 찾아보세요!
+              마음에 드는 콘텐츠를 찾아보세요!
             </p>
           </div>
           <Button asChild>

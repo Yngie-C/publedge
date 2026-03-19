@@ -64,7 +64,7 @@ export default function LibraryPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">구매한 책</h1>
+        <h1 className="text-2xl font-bold text-gray-900">구매한 콘텐츠</h1>
         <Button variant="outline" asChild>
           <Link href="/explore" className="flex items-center gap-2">
             <ShoppingBag className="h-4 w-4" />
@@ -89,10 +89,10 @@ export default function LibraryPage() {
           <ShoppingBag className="h-16 w-16 text-gray-300" />
           <div>
             <p className="text-lg font-semibold text-gray-700">
-              아직 구매한 책이 없습니다
+              아직 구매한 콘텐츠가 없습니다
             </p>
             <p className="mt-1 text-sm text-gray-400">
-              마음에 드는 콘텐츠을 찾아보세요!
+              마음에 드는 콘텐츠를 찾아보세요!
             </p>
           </div>
           <Button asChild>

@@ -81,7 +81,7 @@ export default function PaymentSuccessPage() {
       <CheckCircle2 className="mb-4 h-16 w-16 text-green-500" />
       <h1 className="text-2xl font-bold text-gray-900">결제가 완료되었습니다!</h1>
       <p className="mt-2 text-sm text-gray-500">
-        구매한 책을 바로 읽어보세요.
+        구매한 콘텐츠를 바로 읽어보세요.
       </p>
       <div className="mt-6 flex gap-3">
         {bookId && (

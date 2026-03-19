@@ -210,7 +210,7 @@ export function BookMetadataForm({ book, onSave }: BookMetadataFormProps) {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="책 제목을 입력하세요"
+          placeholder="콘텐츠 제목을 입력하세요"
           className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
         />
       </div>
@@ -221,7 +221,7 @@ export function BookMetadataForm({ book, onSave }: BookMetadataFormProps) {
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="책 소개를 입력하세요"
+          placeholder="콘텐츠 소개를 입력하세요"
           rows={4}
           className="w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
         />

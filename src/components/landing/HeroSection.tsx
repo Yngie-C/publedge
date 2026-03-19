@@ -30,11 +30,11 @@ export function HeroSection({ totalBooks }: HeroSectionProps) {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-3xl font-bold text-white sm:text-4xl">
-            콘텐츠을 발견하고, 읽고, 출판하세요
+            읽고, 쓰고, 세상에 들려주세요
           </h1>
 
           <p className="text-sm text-gray-300">
-            다양한 콘텐츠을 탐색하고 나만의 콘텐츠을 만들어보세요
+            누구나 작가가 될 수 있는 콘텐츠 플랫폼
           </p>
 
           <form onSubmit={handleSearch} className="w-full max-w-lg">

@@ -51,10 +51,10 @@ export function BookGrid({ books }: BookGridProps) {
           </svg>
         </div>
         <p className="text-lg font-medium text-gray-700">
-          아직 공개된 콘텐츠이 없습니다
+          아직 공개된 콘텐츠가 없습니다
         </p>
         <p className="mt-1 text-sm text-gray-400">
-          첫 번째 콘텐츠을 발행해 보세요!
+          첫 번째 콘텐츠를 발행해 보세요!
         </p>
       </div>
     );

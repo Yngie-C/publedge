@@ -68,7 +68,7 @@ function getGradient(title: string): string {
 
 async function fetchBookDetail(bookId: string): Promise<BookDetailData> {
   const res = await fetch(`/api/books/${bookId}/detail`);
-  if (!res.ok) throw new Error("책 정보를 불러오지 못했습니다.");
+  if (!res.ok) throw new Error("콘텐츠 정보를 불러오지 못했습니다.");
   const json = await res.json();
   return json.data;
 }
@@ -202,7 +202,7 @@ export default function BookDetailPage() {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
         <p className="text-lg font-medium text-gray-700">
-          책을 불러올 수 없습니다
+          콘텐츠를 불러올 수 없습니다
         </p>
         <p className="mt-1 text-sm text-gray-400">
           삭제됐거나 접근 권한이 없을 수 있습니다.
@@ -518,7 +518,7 @@ export default function BookDetailPage() {
               <textarea
                 value={reviewComment}
                 onChange={(e) => setReviewComment(e.target.value)}
-                placeholder="이 책에 대한 생각을 공유해주세요..."
+                placeholder="이 콘텐츠에 대한 생각을 공유해주세요..."
                 rows={3}
                 className="mb-3 w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
               />

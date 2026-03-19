@@ -124,10 +124,10 @@ export default function LandingPage() {
       <section className="bg-gray-900 px-4 py-16 text-center sm:px-6">
         <div className="mx-auto max-w-2xl">
           <h2 className="mb-4 text-3xl font-bold text-white">
-            나도 콘텐츠을 출판해보세요
+            나만의 콘텐츠를 출판해보세요
           </h2>
           <p className="mb-8 text-gray-400">
-            글을 쓰고, 콘텐츠으로 만들고, 오디오북으로 변환하세요. 무료로 시작할 수 있습니다.
+            글을 쓰고, 출판하고, 오디오북으로 변환하세요. 누구나 무료로 시작할 수 있습니다.
           </p>
           <Button size="lg" variant="secondary" asChild>
             <Link

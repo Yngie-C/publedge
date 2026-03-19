@@ -44,7 +44,7 @@ export default function CreatePage() {
     setError("");
 
     try {
-      // 1. 책 생성
+      // 1. 콘텐츠 생성
       const bookRes = await fetch("/api/books", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,7 +59,7 @@ export default function CreatePage() {
 
       if (!bookRes.ok) {
         const json = await bookRes.json();
-        throw new Error(json.error ?? "책 생성에 실패했습니다.");
+        throw new Error(json.error ?? "콘텐츠 생성에 실패했습니다.");
       }
 
       const bookJson = await bookRes.json();
