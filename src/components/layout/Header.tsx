@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BookOpen, PlusCircle, Menu, X, User, LogOut, Settings, Search, Compass } from "lucide-react";
+import { Menu, X, LogOut, Settings, Search } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,9 +42,8 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 font-bold text-gray-900">
-          <BookOpen className="h-6 w-6 text-gray-900" />
-          <span className="text-lg">Publedge</span>
+        <Link href="/" className="font-logo text-xl font-bold italic text-gray-900">
+          inspic
         </Link>
 
         {/* Desktop Nav */}
@@ -53,7 +52,6 @@ export function Header() {
             href="/explore"
             className="flex items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
           >
-            <Compass className="h-4 w-4" />
             탐색
           </Link>
           {user && (
@@ -68,7 +66,6 @@ export function Header() {
                 href="/create"
                 className="flex items-center gap-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
               >
-                <PlusCircle className="h-4 w-4" />
                 새 전자책
               </Link>
             </>
@@ -180,7 +177,6 @@ export function Header() {
               className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
               onClick={() => setMobileOpen(false)}
             >
-              <Compass className="h-4 w-4" />
               탐색
             </Link>
             {user ? (
@@ -190,7 +186,6 @@ export function Header() {
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                   onClick={() => setMobileOpen(false)}
                 >
-                  <BookOpen className="h-4 w-4" />
                   내 서재
                 </Link>
                 <Link
@@ -198,7 +193,6 @@ export function Header() {
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                   onClick={() => setMobileOpen(false)}
                 >
-                  <PlusCircle className="h-4 w-4" />
                   새 전자책
                 </Link>
                 <Link

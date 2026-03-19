@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight } from "lucide-react";
 import { useAuthStore } from "@/stores/auth-store";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/layout/Header";
@@ -136,7 +135,6 @@ export default function LandingPage() {
               className="flex items-center gap-2"
             >
               {user ? "새 전자책 만들기" : "무료로 시작하기"}
-              <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
         </div>

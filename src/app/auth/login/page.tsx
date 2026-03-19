@@ -38,7 +38,7 @@ export default function LoginPage() {
     <Card>
       <CardHeader>
         <CardTitle>로그인</CardTitle>
-        <CardDescription>Publedge 계정으로 로그인하세요.</CardDescription>
+        <CardDescription>inspic 계정으로 로그인하세요.</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

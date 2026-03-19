@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  BookOpen,
   PlusCircle,
   Settings,
   LayoutDashboard,
@@ -21,9 +20,8 @@ export function Sidebar() {
 
   return (
     <aside className="flex h-full w-60 flex-col border-r border-gray-200 bg-white py-6">
-      <div className="flex items-center gap-2 px-6 pb-6">
-        <BookOpen className="h-6 w-6 text-gray-900" />
-        <span className="text-lg font-bold text-gray-900">Publedge</span>
+      <div className="px-6 pb-6">
+        <span className="font-logo text-xl font-bold italic text-gray-900">inspic</span>
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-3">

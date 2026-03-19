@@ -82,7 +82,7 @@ export default function SignupPage() {
     <Card>
       <CardHeader>
         <CardTitle>회원가입</CardTitle>
-        <CardDescription>새 Publedge 계정을 만드세요.</CardDescription>
+        <CardDescription>새 inspic 계정을 만드세요.</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

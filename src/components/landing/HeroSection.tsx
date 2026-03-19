@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Search, BookOpen } from "lucide-react";
+import { Search } from "lucide-react";
 
 interface HeroSectionProps {
   totalBooks?: number;
@@ -29,11 +29,6 @@ export function HeroSection({ totalBooks }: HeroSectionProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5">
-            <BookOpen className="h-4 w-4 text-white" />
-            <span className="text-sm font-medium text-white">Publedge</span>
-          </div>
-
           <h1 className="text-3xl font-bold text-white sm:text-4xl">
             전자책을 발견하고, 읽고, 출판하세요
           </h1>

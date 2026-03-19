@@ -448,8 +448,8 @@ export function BookPDF({ book, chapters, authorName }: BookPDFProps) {
       title={book.title}
       author={authorName}
       subject={book.description ?? ""}
-      creator="Publedge"
-      producer="Publedge PDF Generator"
+      creator="inspic"
+      producer="inspic PDF Generator"
     >
       <CoverPage book={book} authorName={authorName} />
       {chapters.length > 1 && <TOCPage book={book} chapters={chapters} />}

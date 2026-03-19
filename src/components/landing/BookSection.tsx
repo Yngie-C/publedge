@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { BookPreviewCard } from "@/components/explore/BookPreviewCard";
 import type { Book } from "@/types";
@@ -30,7 +29,7 @@ export function BookSection({ title, moreHref, books }: BookSectionProps) {
           href={moreHref}
           className="flex items-center gap-1 text-sm font-medium text-gray-500 transition-colors hover:text-gray-900"
         >
-          더보기 <ArrowRight className="h-4 w-4" />
+          더보기 →
         </Link>
       </div>
 

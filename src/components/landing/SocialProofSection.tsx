@@ -1,9 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Users, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
-import { StatsCounter } from "./StatsCounter";
 import { StarRating } from "@/components/social/StarRating";
 
 interface ReviewWithBook {
@@ -53,22 +51,19 @@ export function SocialProofSection({ stats, reviews }: SocialProofSectionProps) 
   return (
     <section className="border-t border-gray-100 bg-gray-50">
       <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-        <div className="mb-12 grid grid-cols-3 gap-4">
-          <StatsCounter
-            icon={BookOpen}
-            value={stats.totalBooks}
-            label="등록된 전자책"
-          />
-          <StatsCounter
-            icon={Users}
-            value={stats.totalAuthors}
-            label="활동 저자"
-          />
-          <StatsCounter
-            icon={MessageSquare}
-            value={stats.totalReviews}
-            label="독자 리뷰"
-          />
+        <div className="mb-12 grid grid-cols-3 gap-4 text-center">
+          <div className="p-6">
+            <span className="text-3xl font-bold text-gray-900">{stats.totalBooks.toLocaleString("ko-KR")}</span>
+            <p className="mt-1 text-sm text-gray-500">등록된 전자책</p>
+          </div>
+          <div className="p-6">
+            <span className="text-3xl font-bold text-gray-900">{stats.totalAuthors.toLocaleString("ko-KR")}</span>
+            <p className="mt-1 text-sm text-gray-500">활동 저자</p>
+          </div>
+          <div className="p-6">
+            <span className="text-3xl font-bold text-gray-900">{stats.totalReviews.toLocaleString("ko-KR")}</span>
+            <p className="mt-1 text-sm text-gray-500">독자 리뷰</p>
+          </div>
         </div>
 
         <h2 className="mb-8 text-center text-xl font-bold text-gray-900">
@@ -112,7 +107,7 @@ export function SocialProofSection({ stats, reviews }: SocialProofSectionProps) 
                 href={`/book/${review.book_id}`}
                 className="mt-1 block text-xs text-gray-400 transition-colors hover:text-gray-600"
               >
-                📖 {review.book_title}
+                {review.book_title}
               </Link>
 
               {review.content && (
