@@ -62,12 +62,6 @@ export function Header() {
               >
                 내 서재
               </Link>
-              <Link
-                href="/studio"
-                className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
-              >
-                스튜디오
-              </Link>
             </>
           )}
         </nav>
@@ -104,6 +98,11 @@ export function Header() {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem asChild>
+                  <Link href="/studio" className="flex items-center gap-2">
+                    스튜디오
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href="/settings" className="flex items-center gap-2">
                     <Settings className="h-4 w-4" />
@@ -187,13 +186,6 @@ export function Header() {
                   onClick={() => setMobileOpen(false)}
                 >
                   내 서재
-                </Link>
-                <Link
-                  href="/studio"
-                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  스튜디오
                 </Link>
                 <Link
                   href="/settings"
