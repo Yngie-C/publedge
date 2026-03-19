@@ -13,8 +13,7 @@ export async function GET() {
       id, user_id, book_id, price_paid, payment_method, status, purchased_at, created_at,
       books (
         id, title, description, cover_image_url, language, status, visibility,
-        total_chapters, total_words, owner_id,
-        user_profiles!owner_id ( display_name )
+        total_chapters, total_words, owner_id
       )
     `)
     .eq("user_id", user.id)
@@ -23,19 +22,32 @@ export async function GET() {
 
   if (error) return apiError(error.message, "SERVER_ERROR", 500);
 
-  // Flatten author name
+  // Fetch author names separately (no direct FK between books and user_profiles)
+  const ownerIds = [...new Set(
+    (data ?? [])
+      .map((p) => (p.books as unknown as Record<string, unknown> | null)?.owner_id as string)
+      .filter(Boolean),
+  )];
+
+  const authorMap = new Map<string, string | null>();
+  if (ownerIds.length > 0) {
+    const { data: profiles } = await supabase
+      .from("user_profiles")
+      .select("user_id, display_name")
+      .in("user_id", ownerIds);
+
+    for (const p of profiles ?? []) {
+      authorMap.set(p.user_id as string, p.display_name as string | null);
+    }
+  }
+
   const purchases = (data ?? []).map((p) => {
     const book = p.books as unknown as Record<string, unknown> | null;
     if (book) {
-      const profiles = book.user_profiles as
-        | { display_name: string | null }
-        | { display_name: string | null }[]
-        | null;
-      const authorName = Array.isArray(profiles)
-        ? profiles[0]?.display_name ?? null
-        : (profiles as { display_name: string | null } | null)?.display_name ?? null;
-      const { user_profiles: _p, ...bookRest } = book as Record<string, unknown> & { user_profiles: unknown };
-      return { ...p, books: { ...bookRest, author_name: authorName } };
+      return {
+        ...p,
+        books: { ...book, author_name: authorMap.get(book.owner_id as string) ?? null },
+      };
     }
     return p;
   });
