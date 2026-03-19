@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -25,6 +26,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState(false);
   const [error, setError] = useState("");
+  const [agreed, setAgreed] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -152,11 +154,38 @@ export default function CheckoutPage() {
           </div>
         )}
 
+        {/* 환불 정책 안내 */}
+        <div className="mb-4 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-600">
+          <p className="mb-1">
+            디지털 콘텐츠 특성상 콘텐츠 열람 후에는 환불이 제한됩니다.
+          </p>
+          <p className="text-xs text-gray-400">
+            자세한 내용은{" "}
+            <Link href="/terms" className="underline hover:text-gray-600">이용약관</Link>
+            {" "}및{" "}
+            <Link href="/privacy" className="underline hover:text-gray-600">개인정보처리방침</Link>
+            을 확인해 주세요.
+          </p>
+        </div>
+
+        {/* 동의 체크박스 */}
+        <label className="mb-4 flex cursor-pointer items-start gap-2 text-sm text-gray-700">
+          <input
+            type="checkbox"
+            checked={agreed}
+            onChange={(e) => setAgreed(e.target.checked)}
+            className="mt-0.5 h-4 w-4 flex-shrink-0 cursor-pointer accent-gray-900"
+          />
+          <span>
+            위 내용을 확인하였으며, 이용약관 및 개인정보처리방침에 동의합니다.
+          </span>
+        </label>
+
         {/* 결제 버튼 */}
         <Button
           onClick={handlePayment}
           isLoading={paying}
-          disabled={paying}
+          disabled={paying || !agreed}
           size="lg"
           className="w-full"
         >

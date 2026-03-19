@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/lib/providers";
 import { ToastProvider } from "@/components/ui/toast";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,8 +31,15 @@ export const metadata: Metadata = {
   keywords: ["콘텐츠", "오디오북", "글쓰기", "출판", "ebook"],
   openGraph: {
     title: "inspic",
-    description: "콘텐츠 제작 및 출판 플랫폼",
+    description: "텍스트를 전자책과 오디오북으로. 지식 콘텐츠 제작 및 출판 플랫폼",
     type: "website",
+    siteName: "inspic",
+    locale: "ko_KR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "inspic",
+    description: "텍스트를 전자책과 오디오북으로. 지식 콘텐츠 제작 및 출판 플랫폼",
   },
 };
 
@@ -46,6 +54,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} antialiased`}
 
       >
+        <GoogleAnalytics />
         <Providers>
           <ToastProvider>{children}</ToastProvider>
         </Providers>

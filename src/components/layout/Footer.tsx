@@ -12,6 +12,9 @@ export function Footer() {
             <Link href="/about" className="hover:text-gray-900 transition-colors">
               소개
             </Link>
+            <Link href="/faq" className="hover:text-gray-900 transition-colors">
+              FAQ
+            </Link>
             <Link href="/privacy" className="hover:text-gray-900 transition-colors">
               개인정보처리방침
             </Link>
@@ -23,6 +26,12 @@ export function Footer() {
           <p className="text-sm text-gray-400">
             &copy; {year} inspic. All rights reserved.
           </p>
+        </div>
+
+        <div className="mt-6 border-t border-gray-100 pt-4 text-center text-xs text-gray-400 space-y-1">
+          <p>상호: inspic | 대표: [대표자명] | 사업자등록번호: [000-00-00000]</p>
+          <p>통신판매업 신고번호: [제0000-서울OO-0000호] | 소재지: [주소]</p>
+          <p>고객문의: contact@inspic.kr | 호스팅 서비스: Vercel Inc.</p>
         </div>
       </div>
     </footer>

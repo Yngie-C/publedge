@@ -16,6 +16,7 @@ interface AuthState {
     displayName?: string;
   }) => Promise<{ error?: string }>;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
+  signInWithOAuth: (provider: 'google' | 'kakao') => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   fetchProfile: () => Promise<void>;
 }
@@ -43,7 +44,25 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       supabase.auth.onAuthStateChange(async (event, session) => {
         if (event === "SIGNED_IN" && session?.user) {
           set({ user: session.user });
-          await get().fetchProfile();
+          const { data } = await supabase
+            .from("user_profiles")
+            .select("*")
+            .eq("user_id", session.user.id)
+            .maybeSingle();
+          if (data) {
+            set({ profile: data as UserProfile });
+          } else {
+            const displayName =
+              session.user.user_metadata?.full_name ||
+              session.user.user_metadata?.name ||
+              session.user.email?.split("@")[0] ||
+              "";
+            await supabase.from("user_profiles").insert({
+              user_id: session.user.id,
+              display_name: displayName,
+            });
+            await get().fetchProfile();
+          }
         } else if (event === "SIGNED_OUT") {
           set({ user: null, profile: null });
         }
@@ -89,6 +108,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     return {};
   },
 
+  signInWithOAuth: async (provider) => {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) return { error: error.message };
+    return {};
+  },
+
   signOut: async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
@@ -104,7 +135,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       .from("user_profiles")
       .select("*")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
     if (data) {
       set({ profile: data as UserProfile });

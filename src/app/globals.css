@@ -174,3 +174,68 @@ body {
   margin-top: 1.75em;
   margin-bottom: 0.75em;
 }
+
+/* Reader code/prompt block styling */
+.reader-content pre {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-size: 0.875em;
+  line-height: 1.6;
+}
+
+.reader-content code {
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.875em;
+}
+
+.reader-content pre code {
+  font-size: inherit;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.reader-content :not(pre) > code {
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.85em;
+}
+
+/* Light theme code blocks */
+.bg-white .reader-content pre {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  color: #1a1a2e;
+}
+
+.bg-white .reader-content :not(pre) > code {
+  background-color: #f1f3f5;
+  color: #c92a2a;
+}
+
+/* Dark theme code blocks */
+.bg-gray-950 .reader-content pre {
+  background-color: #1a1b26;
+  border: 1px solid #2d2d3f;
+  color: #c0caf5;
+}
+
+.bg-gray-950 .reader-content :not(pre) > code {
+  background-color: #1a1b26;
+  color: #ff9e64;
+}
+
+/* Sepia theme code blocks */
+.bg-amber-50 .reader-content pre {
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b33;
+  color: #78350f;
+}
+
+.bg-amber-50 .reader-content :not(pre) > code {
+  background-color: #fef3c7;
+  color: #b45309;
+}
