@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/landing/HeroSection";
-import { QuickFilterBar } from "@/components/landing/QuickFilterBar";
 import { BookSection } from "@/components/landing/BookSection";
 import { BookSectionSkeleton } from "@/components/landing/BookSectionSkeleton";
 import { SocialProofSection } from "@/components/landing/SocialProofSection";
@@ -62,13 +61,6 @@ export default function LandingPage() {
 
       {/* Hero */}
       <HeroSection totalBooks={data?.stats?.totalBooks} />
-
-      {/* Quick Filter Bar */}
-      <section className="border-b border-gray-100 bg-white px-4 py-4 sm:px-6">
-        <div className="mx-auto max-w-7xl">
-          <QuickFilterBar />
-        </div>
-      </section>
 
       {/* Content Sections */}
       <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6">
