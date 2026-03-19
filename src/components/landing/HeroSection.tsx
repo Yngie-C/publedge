@@ -29,14 +29,6 @@ export function HeroSection({ totalBooks }: HeroSectionProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl font-bold text-white sm:text-4xl">
-            읽고, 쓰고, 세상에 들려주세요
-          </h1>
-
-          <p className="text-sm text-gray-300">
-            누구나 작가가 될 수 있는 콘텐츠 플랫폼
-          </p>
-
           <form onSubmit={handleSearch} className="w-full max-w-lg">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />

@@ -239,3 +239,12 @@ body {
   background-color: #fef3c7;
   color: #b45309;
 }
+
+/* Scrollbar hide utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

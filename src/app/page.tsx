@@ -1,9 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { useAuthStore } from "@/stores/auth-store";
-import { Button } from "@/components/ui/button";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/landing/HeroSection";
@@ -41,8 +38,6 @@ interface LandingData {
 }
 
 export default function LandingPage() {
-  const user = useAuthStore((s) => s.user);
-
   const { data, isLoading, isError } = useQuery({
     queryKey: ["landing"],
     queryFn: async () => {
@@ -119,26 +114,6 @@ export default function LandingPage() {
           reviews={data?.recentReviews ?? []}
         />
       )}
-
-      {/* Author CTA */}
-      <section className="bg-gray-900 px-4 py-16 text-center sm:px-6">
-        <div className="mx-auto max-w-2xl">
-          <h2 className="mb-4 text-3xl font-bold text-white">
-            나만의 콘텐츠를 출판해보세요
-          </h2>
-          <p className="mb-8 text-gray-400">
-            글을 쓰고, 출판하고, 오디오북으로 변환하세요. 누구나 무료로 시작할 수 있습니다.
-          </p>
-          <Button size="lg" variant="secondary" asChild>
-            <Link
-              href={user ? "/studio" : "/auth/signup"}
-              className="flex items-center gap-2"
-            >
-              {user ? "크리에이터 스튜디오" : "무료로 시작하기"}
-            </Link>
-          </Button>
-        </div>
-      </section>
 
       <Footer />
     </div>
