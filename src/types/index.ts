@@ -61,10 +61,40 @@ export interface Audiobook {
   book_id: string;
   voice_id: string;
   voice_provider: string;
+  custom_voice_id: string | null;
   status: AudioStatus;
   total_duration_seconds: number | null;
   created_at: string;
   updated_at: string;
+}
+
+// --- Custom Voice ---
+export type VoiceType = "designed" | "cloned";
+
+export interface CustomVoice {
+  id: string;
+  user_id: string;
+  name: string;
+  type: VoiceType;
+  voice_provider: string;
+  instructions: string | null;
+  ref_audio_url: string | null;
+  ref_text: string | null;
+  consent_confirmed: boolean;
+  language: string;
+  preview_audio_url: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// --- Preset Voice ---
+export interface PresetVoice {
+  id: string;
+  label: string;
+  description: string;
+  lang: string;
+  type: "preset";
 }
 
 export interface AudioChapter {
@@ -106,6 +136,31 @@ export interface Highlight {
   note: string | null;
   color: string;
   created_at: string;
+  share_token?: string | null;
+  is_public?: boolean;
+  shared_at?: string | null;
+}
+
+export interface HighlightShareEvent {
+  id: string;
+  highlight_id: string;
+  platform: string;
+  referrer: string | null;
+  viewer_ip_hash: string | null;
+  created_at: string;
+}
+
+export interface SharedHighlightResponse {
+  highlight: Highlight;
+  book: {
+    id: string;
+    title: string;
+    cover_image_url: string | null;
+    owner: {
+      display_name: string;
+      avatar_url: string | null;
+    };
+  };
 }
 
 export interface Bookmark {
