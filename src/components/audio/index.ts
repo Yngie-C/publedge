@@ -6,3 +6,5 @@ export { TTSProgressPanel } from "./TTSProgressPanel";
 export { PlaybackSpeedButton } from "./PlaybackSpeedButton";
 export { VolumeControl } from "./VolumeControl";
 export { WaveformVisualizer } from "./WaveformVisualizer";
+export { VoiceDesigner } from "./VoiceDesigner";
+export { VoiceCloner } from "./VoiceCloner";

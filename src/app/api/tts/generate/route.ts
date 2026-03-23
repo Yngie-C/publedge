@@ -7,6 +7,7 @@ interface GenerateTTSBody {
   book_id: string;
   voice_id?: string;
   voice_provider?: string;
+  custom_voice_id?: string;
 }
 
 export async function POST(request: Request) {
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
     return apiError("Invalid JSON body", "VALIDATION_ERROR", 400);
   }
 
-  const { book_id, voice_id = "alloy", voice_provider = "openai" } = body;
+  const { book_id, voice_id = "Sohee", voice_provider = "qwen3", custom_voice_id } = body;
 
   if (!book_id) {
     return apiError("book_id is required", "VALIDATION_ERROR", 400);
@@ -79,13 +80,42 @@ export async function POST(request: Request) {
     );
   }
 
+  // Resolve custom voice options (if using a custom voice)
+  let ttsInstructions: string | undefined;
+  let ttsRefAudioUrl: string | undefined;
+  let ttsRefText: string | undefined;
+  let resolvedVoiceId = voice_id;
+
+  if (custom_voice_id) {
+    const { data: customVoice, error: cvError } = await supabase
+      .from("custom_voices")
+      .select("*")
+      .eq("id", custom_voice_id)
+      .eq("user_id", user.id)
+      .single();
+
+    if (cvError || !customVoice) {
+      return apiError("Custom voice not found", "NOT_FOUND", 404);
+    }
+
+    resolvedVoiceId = `custom:${custom_voice_id}`;
+
+    if (customVoice.type === "designed" && customVoice.instructions) {
+      ttsInstructions = customVoice.instructions;
+    } else if (customVoice.type === "cloned" && customVoice.ref_audio_url && customVoice.ref_text) {
+      ttsRefAudioUrl = customVoice.ref_audio_url;
+      ttsRefText = customVoice.ref_text;
+    }
+  }
+
   // Create audiobook record
   const { data: audiobook, error: audiobookError } = await supabase
     .from("audiobooks")
     .insert({
       book_id,
-      voice_id,
+      voice_id: resolvedVoiceId,
       voice_provider,
+      custom_voice_id: custom_voice_id || null,
       status: "pending",
     })
     .select()
@@ -132,7 +162,10 @@ export async function POST(request: Request) {
 
   // Start async processing (fire-and-forget)
   // In production this would be handled by the Edge Function / queue
-  processAudiobookAsync(audiobook.id, book_id, chapters, voice_id, voice_provider);
+  processAudiobookAsync(
+    audiobook.id, book_id, chapters, voice_id, voice_provider,
+    { customVoiceId: custom_voice_id, instructions: ttsInstructions, refAudioUrl: ttsRefAudioUrl, refText: ttsRefText }
+  );
 
   return apiSuccess({ audiobook_id: audiobook.id, status: "processing" }, 202);
 }
@@ -143,7 +176,8 @@ function processAudiobookAsync(
   bookId: string,
   chapters: Array<{ id: string; content_html: string; order_index: number }>,
   voice: string,
-  provider: string
+  provider: string,
+  ttsOptions?: { customVoiceId?: string; instructions?: string; refAudioUrl?: string; refText?: string }
 ): void {
   // We intentionally do not await this — the response has already been returned
   (async () => {
@@ -154,9 +188,7 @@ function processAudiobookAsync(
     );
     const supabase = createSupabaseClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SECRET_KEY ||
-        process.env.SUPABASE_SERVICE_ROLE_KEY ||
-        "",
+      process.env.SUPABASE_SECRET_KEY || "",
     );
 
     let anyFailed = false;
@@ -171,6 +203,10 @@ function processAudiobookAsync(
           contentHtml: chapter.content_html,
           voice,
           provider,
+          customVoiceId: ttsOptions?.customVoiceId,
+          instructions: ttsOptions?.instructions,
+          refAudioUrl: ttsOptions?.refAudioUrl,
+          refText: ttsOptions?.refText,
         });
 
         // Accumulate duration

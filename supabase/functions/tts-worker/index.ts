@@ -1,3 +1,11 @@
+/**
+ * @deprecated TTS processing has been consolidated to /api/tts/generate route.
+ * This Edge Function is no longer triggered by database webhooks.
+ * Retained for reference only — remove after migration is verified stable.
+ *
+ * Migration: Qwen3-TTS (2026-03-20)
+ */
+
 // This is a Supabase Edge Function stub for TTS processing
 // In production, this would be triggered by a Database Webhook
 // when audio_chapters records are inserted
@@ -161,7 +169,7 @@ serve(async (req: Request) => {
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const serviceRoleKey = Deno.env.get("SUPABASE_SECRET_KEY")!;
   const openaiApiKey = Deno.env.get("OPENAI_API_KEY");
 
   const supabase = createClient(supabaseUrl, serviceRoleKey);
