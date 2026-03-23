@@ -1,50 +1,63 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { Search, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-interface HeroSectionProps {
-  totalBooks?: number;
-}
-
-export function HeroSection({ totalBooks }: HeroSectionProps) {
+export function HeroSection({ totalBooks }: { totalBooks?: number }) {
   const [query, setQuery] = useState("");
   const router = useRouter();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (query.trim()) {
-      router.push(`/explore?q=${encodeURIComponent(query)}`);
-    }
+    if (query.trim()) router.push(`/explore?q=${encodeURIComponent(query)}`);
   };
 
   return (
-    <section className="bg-gradient-to-br from-gray-900 to-gray-800 py-16 sm:py-20">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
+    <section className="relative overflow-hidden bg-white pt-20 pb-16 md:pt-32 md:pb-24">
+      {/* 배경 장식 (심플한 그라데이션 블러) */}
+      <div className="absolute top-0 left-1/2 -z-10 h-[400px] w-[800px] -translate-x-1/2 opacity-20 blur-[120px] bg-gradient-to-r from-brand-400 to-orange-300" />
+
+      <div className="mx-auto max-w-5xl px-4 text-center">
         <motion.div
-          className="flex flex-col items-center gap-4 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
         >
-          <form onSubmit={handleSearch} className="w-full max-w-lg">
-            <div className="relative">
+          <h1 className="font-logo text-5xl font-bold tracking-tight text-gray-900 md:text-7xl">
+            읽고, 듣고, <br />
+            <span className="text-brand-600">발견하세요</span>
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-500 md:text-xl">
+            전자책부터 AI 오디오북까지. <br className="hidden md:block" />
+            당신의 다음 이야기가 여기 있습니다.
+          </p>
+
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button size="lg" className="h-14 px-8 rounded-full text-base" asChild>
+              <Link href="/explore">
+                콘텐츠 둘러보기 <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+
+            <form onSubmit={handleSearch} className="relative w-full max-w-sm">
               <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="콘텐츠 검색..."
-                className="w-full rounded-full border border-white/20 bg-white/10 py-3 pl-12 pr-6 text-white placeholder:text-gray-400 outline-none focus:border-white/40 focus:ring-2 focus:ring-white/20"
+                placeholder="관심 있는 주제 검색..."
+                className="h-14 w-full rounded-full border border-gray-200 bg-gray-50 pl-12 pr-6 text-sm outline-none transition-all focus:border-brand-300 focus:bg-white focus:ring-4 focus:ring-brand-50"
               />
-            </div>
-          </form>
+            </form>
+          </div>
 
           {totalBooks != null && (
-            <p className="text-xs text-gray-400">
-              콘텐츠 {totalBooks.toLocaleString("ko-KR")}권 등록됨
+            <p className="mt-6 text-sm font-medium text-gray-400">
+              이미 <span className="text-gray-900">{totalBooks.toLocaleString()}권</span>의 이야기가 출판되었습니다.
             </p>
           )}
         </motion.div>

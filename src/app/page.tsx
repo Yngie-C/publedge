@@ -7,6 +7,7 @@ import { HeroSection } from "@/components/landing/HeroSection";
 import { BookSection } from "@/components/landing/BookSection";
 import { BookSectionSkeleton } from "@/components/landing/BookSectionSkeleton";
 import { SocialProofSection } from "@/components/landing/SocialProofSection";
+import { FeaturesSection } from "@/components/landing/FeaturesSection";
 import type { Book } from "@/types";
 
 interface ReviewWithBook {
@@ -56,8 +57,11 @@ export default function LandingPage() {
       {/* Hero */}
       <HeroSection totalBooks={data?.stats?.totalBooks} />
 
+      {/* 핵심 가치 섹션 */}
+      <FeaturesSection />
+
       {/* Content Sections */}
-      <main className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6">
+      <main className="mx-auto w-full max-w-7xl px-4 py-20 sm:px-6">
         {isError && (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <p className="text-lg font-medium text-gray-700">
@@ -69,11 +73,11 @@ export default function LandingPage() {
 
         {/* Featured / Popular */}
         {isLoading ? (
-          <div className="mb-12"><BookSectionSkeleton /></div>
+          <div className="mb-24"><BookSectionSkeleton /></div>
         ) : data?.featured && data.featured.length > 0 ? (
-          <div className="mb-12">
+          <div className="mb-24">
             <BookSection
-              title="인기 콘텐츠"
+              title="지금 주목받는 콘텐츠"
               moreHref="/explore?sort=popular"
               books={data.featured}
             />
@@ -82,9 +86,9 @@ export default function LandingPage() {
 
         {/* Newest */}
         {isLoading ? (
-          <div className="mb-12"><BookSectionSkeleton /></div>
+          <div className="mb-24"><BookSectionSkeleton /></div>
         ) : data?.newest && data.newest.length > 0 ? (
-          <div className="mb-12">
+          <div className="mb-24">
             <BookSection
               title="새로 나온 콘텐츠"
               moreHref="/explore?sort=newest"
@@ -95,9 +99,9 @@ export default function LandingPage() {
 
         {/* Free */}
         {isLoading ? (
-          <div className="mb-12"><BookSectionSkeleton /></div>
+          <div className="mb-24"><BookSectionSkeleton /></div>
         ) : data?.free && data.free.length > 0 ? (
-          <div className="mb-12">
+          <div className="mb-24">
             <BookSection
               title="무료 콘텐츠"
               moreHref="/explore?priceRange=free"
