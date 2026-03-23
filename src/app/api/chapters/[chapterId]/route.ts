@@ -37,6 +37,11 @@ export async function GET(_request: NextRequest, { params }: Params) {
     return apiError("Access denied", "FORBIDDEN", 403);
   }
 
+  // Non-owners cannot access draft chapters
+  if (book.owner_id !== user.id && chapter.status === "draft") {
+    return apiError("Chapter not found", "NOT_FOUND", 404);
+  }
+
   return apiSuccess(chapter);
 }
 
@@ -64,6 +69,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     content_html?: string;
     content_raw?: string;
     order_index?: number;
+    status?: string;
   };
   try {
     body = await request.json();
@@ -75,6 +81,12 @@ export async function PUT(request: NextRequest, { params }: Params) {
   if (body.title !== undefined) updates.title = String(body.title).trim();
   if (body.order_index !== undefined) updates.order_index = body.order_index;
   if (body.content_raw !== undefined) updates.content_raw = body.content_raw;
+  if (body.status !== undefined && ["draft", "published"].includes(body.status)) {
+    updates.status = body.status;
+    if (body.status === "published" && !chapter.published_at) {
+      updates.published_at = new Date().toISOString();
+    }
+  }
 
   let wordDiff = 0;
   if (body.content_html !== undefined) {

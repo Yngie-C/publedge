@@ -36,11 +36,12 @@ export async function GET(request: NextRequest) {
     return apiError("Access denied", "FORBIDDEN", 403);
   }
 
-  // Fetch chapters ordered by order_index
+  // Fetch chapters ordered by order_index (published only)
   const { data: chapters, error: chaptersError } = await supabase
     .from("chapters")
     .select("*")
     .eq("book_id", bookId)
+    .eq("status", "published")
     .order("order_index", { ascending: true });
 
   if (chaptersError) {

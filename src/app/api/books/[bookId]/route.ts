@@ -23,11 +23,18 @@ export async function GET(_request: NextRequest, { params }: Params) {
     return apiError("Access denied", "FORBIDDEN", 403);
   }
 
-  const { data: chapters, error: chaptersError } = await supabase
+  const isOwner = book.owner_id === user.id;
+  let chaptersQuery = supabase
     .from("chapters")
     .select("*")
     .eq("book_id", bookId)
     .order("order_index", { ascending: true });
+
+  if (!isOwner) {
+    chaptersQuery = chaptersQuery.eq("status", "published");
+  }
+
+  const { data: chapters, error: chaptersError } = await chaptersQuery;
 
   if (chaptersError) return apiError(chaptersError.message, "SERVER_ERROR", 500);
 

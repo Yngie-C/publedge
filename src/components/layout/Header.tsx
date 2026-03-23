@@ -13,6 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+// [SUN-68] 시리즈 기능 — 추후 활성화
+// import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -83,6 +85,8 @@ export function Header() {
 
         {/* Desktop Auth */}
         <div className="hidden items-center gap-3 md:flex">
+          {/* [SUN-68] 시리즈 기능 — 추후 활성화 */}
+          {/* {user && <NotificationBell />} */}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

@@ -25,13 +25,20 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuthStore } from "@/stores/auth-store";
 import { cn } from "@/lib/utils";
-import type { Book, Chapter, Audiobook } from "@/types";
+// [SUN-68] 시리즈 기능 — 추후 활성화
+// import { SubscribeButton } from "@/components/series/SubscribeButton";
+// import { SeriesInfo } from "@/components/series/SeriesInfo";
+import type { Book, Chapter, Audiobook, SeriesMetadata } from "@/types";
 
 interface BookDetailData {
   book: Book & { author_name?: string | null; price: number; is_free: boolean };
   chapters: Chapter[];
   audiobook: Audiobook | null;
   reviews: Review[];
+  series_metadata?: SeriesMetadata | null;
+  subscriber_count?: number;
+  published_chapter_count?: number;
+  is_subscribed?: boolean;
 }
 
 interface Review {
@@ -214,8 +221,10 @@ export function BookDetailClient() {
     );
   }
 
-  const { book, chapters, audiobook, reviews } = data;
+  const { book, chapters, audiobook, reviews, series_metadata, subscriber_count, published_chapter_count, is_subscribed } = data;
   const isOwner = user?.id === book.owner_id;
+  // [SUN-68] 시리즈 기능 — 추후 활성화
+  const isSeries = false; // book.content_type === "series";
   const isPublished = book.status === "published";
   const readingMinutes = Math.max(1, Math.round(book.total_words / 200));
   const langLabel = LANGUAGE_LABELS[book.language] ?? book.language;
@@ -314,6 +323,17 @@ export function BookDetailClient() {
             )}
           </div>
 
+          {/* [SUN-68] 시리즈 기능 — 추후 활성화 */}
+          {/* {isSeries && series_metadata && (
+            <div className="mb-5">
+              <SeriesInfo
+                metadata={series_metadata}
+                publishedChapterCount={published_chapter_count ?? 0}
+                subscriberCount={subscriber_count}
+              />
+            </div>
+          )} */}
+
           {/* Price display */}
           {!isOwner && book.price > 0 && (
             <div className="mb-4">
@@ -341,12 +361,22 @@ export function BookDetailClient() {
                     읽기
                   </Link>
                 </Button>
-                <Button variant="outline" asChild>
-                  <Link href={`/editor/${book.id}`} className="flex items-center gap-2">
-                    <Edit className="h-4 w-4" />
-                    편집
-                  </Link>
-                </Button>
+                {/* [SUN-68] 시리즈 기능 — 추후 활성화 */}
+                {/* {isSeries ? (
+                  <Button variant="outline" asChild>
+                    <Link href={`/series/${book.id}/manage`} className="flex items-center gap-2">
+                      <Edit className="h-4 w-4" />
+                      시리즈 관리
+                    </Link>
+                  </Button>
+                ) : ( */}
+                  <Button variant="outline" asChild>
+                    <Link href={`/editor/${book.id}`} className="flex items-center gap-2">
+                      <Edit className="h-4 w-4" />
+                      편집
+                    </Link>
+                  </Button>
+                {/* )} */}
                 <Button
                   variant={isPublished ? "secondary" : "default"}
                   isLoading={publishMutation.isPending}
@@ -356,6 +386,14 @@ export function BookDetailClient() {
                 </Button>
               </>
             )}
+
+            {/* [SUN-68] 시리즈 기능 — 추후 활성화 */}
+            {/* {!isOwner && isSeries && (
+              <SubscribeButton
+                seriesId={book.id}
+                initialSubscribed={is_subscribed ?? false}
+              />
+            )} */}
 
             {/* 비소유자 - 접근 가능 (무료 또는 구매 완료) */}
             {!isOwner && accessInfo?.hasAccess && (

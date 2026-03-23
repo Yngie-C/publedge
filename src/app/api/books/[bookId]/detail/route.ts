@@ -47,12 +47,49 @@ export async function GET(
   const { user_profiles: _p, ...bookRest } = bookData;
   const book = { ...bookRest, author_name: authorName };
 
-  // Fetch chapters
-  const { data: chapters } = await supabase
+  // Fetch chapters (non-owners only see published chapters)
+  let chaptersQuery = supabase
     .from("chapters")
-    .select("id, title, slug, order_index, word_count, estimated_reading_time, created_at, updated_at, book_id")
+    .select("id, title, slug, order_index, word_count, estimated_reading_time, created_at, updated_at, book_id, status, published_at")
     .eq("book_id", bookId)
     .order("order_index", { ascending: true });
+
+  if (!isOwner) {
+    chaptersQuery = chaptersQuery.eq("status", "published");
+  }
+
+  const { data: chapters } = await chaptersQuery;
+
+  // Fetch series metadata if this is a series
+  let seriesMetadata = null;
+  let subscriberCount = null;
+  if (book.content_type === "series") {
+    const { data: smData } = await supabase
+      .from("series_metadata")
+      .select("*")
+      .eq("book_id", bookId)
+      .maybeSingle();
+    seriesMetadata = smData ?? null;
+
+    const { count } = await supabase
+      .from("series_subscriptions")
+      .select("id", { count: "exact", head: true })
+      .eq("book_id", bookId)
+      .eq("status", "active");
+    subscriberCount = count ?? 0;
+  }
+
+  // Fetch user's subscription status if authenticated and this is a series
+  let userSubscription = null;
+  if (user && book.content_type === "series") {
+    const { data: subData } = await supabase
+      .from("series_subscriptions")
+      .select("id, status, created_at")
+      .eq("book_id", bookId)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    userSubscription = subData ?? null;
+  }
 
   // Fetch audiobook
   const { data: audiobook } = await supabase
@@ -92,5 +129,8 @@ export async function GET(
     chapters: chapters ?? [],
     audiobook: audiobook ?? null,
     reviews,
+    series_metadata: seriesMetadata,
+    subscriber_count: subscriberCount,
+    user_subscription: userSubscription,
   });
 }

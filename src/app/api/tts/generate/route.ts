@@ -46,11 +46,12 @@ export async function POST(request: Request) {
     return apiError("Forbidden", "FORBIDDEN", 403);
   }
 
-  // Verify book has chapters
+  // Verify book has chapters (only published chapters for TTS)
   const { data: chapters, error: chaptersError } = await supabase
     .from("chapters")
-    .select("id, content_html, order_index")
+    .select("id, content_html, order_index, status")
     .eq("book_id", book_id)
+    .eq("status", "published")
     .order("order_index", { ascending: true });
 
   if (chaptersError) {
@@ -59,7 +60,7 @@ export async function POST(request: Request) {
 
   if (!chapters || chapters.length === 0) {
     return apiError(
-      "Book has no chapters to convert",
+      "Book has no published chapters to convert",
       "VALIDATION_ERROR",
       400
     );

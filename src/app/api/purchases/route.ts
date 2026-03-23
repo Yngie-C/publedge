@@ -13,7 +13,7 @@ export async function GET() {
       id, user_id, book_id, price_paid, payment_method, status, purchased_at, created_at,
       books (
         id, title, description, cover_image_url, language, status, visibility,
-        total_chapters, total_words, owner_id
+        total_chapters, total_words, owner_id, content_type
       )
     `)
     .eq("user_id", user.id)

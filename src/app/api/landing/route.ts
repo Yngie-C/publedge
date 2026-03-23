@@ -33,7 +33,7 @@ interface ReviewWithBook {
 }
 
 const BOOK_SELECT =
-  "id, title, description, cover_image_url, language, status, visibility, total_chapters, total_words, published_at, price, owner_id";
+  "id, title, description, cover_image_url, language, status, visibility, total_chapters, total_words, published_at, price, owner_id, content_type";
 
 async function fetchAuthorMap(
   admin: ReturnType<typeof createAdminClient>,

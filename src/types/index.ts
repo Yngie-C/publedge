@@ -17,6 +17,7 @@ export interface UserProfile {
 export type BookStatus = "draft" | "processing" | "published" | "archived";
 export type BookVisibility = "private" | "unlisted" | "public";
 export type SourceType = "text" | "markdown" | "docx";
+export type ContentType = "book" | "series";
 
 export interface Book {
   id: string;
@@ -34,11 +35,14 @@ export interface Book {
   published_at: string | null;
   price: number;
   is_free: boolean;
+  content_type: ContentType;
   created_at: string;
   updated_at: string;
 }
 
 // --- Chapter ---
+export type ChapterStatus = "draft" | "published";
+
 export interface Chapter {
   id: string;
   book_id: string;
@@ -49,6 +53,8 @@ export interface Chapter {
   content_raw: string | null;
   word_count: number;
   estimated_reading_time: number | null;
+  status: ChapterStatus;
+  published_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -272,4 +278,41 @@ export type AccessReason = "owner" | "purchased" | "free" | "none";
 export interface BookAccessResult {
   hasAccess: boolean;
   reason: AccessReason;
+}
+
+// --- Series ---
+export type SeriesStatus = "ongoing" | "hiatus" | "completed";
+
+export interface SeriesMetadata {
+  id: string;
+  book_id: string;
+  series_status: SeriesStatus;
+  schedule_day: string | null;
+  schedule_description: string | null;
+  last_chapter_published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SeriesSubscription {
+  id: string;
+  user_id: string;
+  series_id: string;
+  notify_enabled: boolean;
+  created_at: string;
+}
+
+// --- Notifications ---
+export type NotificationType = "new_chapter" | "series_complete" | "system";
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  type: NotificationType;
+  title: string;
+  body: string | null;
+  link: string | null;
+  is_read: boolean;
+  metadata: Record<string, unknown> | null;
+  created_at: string;
 }

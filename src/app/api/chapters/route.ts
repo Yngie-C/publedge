@@ -31,11 +31,18 @@ export async function GET(request: NextRequest) {
     return apiError("Access denied", "FORBIDDEN", 403);
   }
 
-  const { data, error } = await supabase
+  const isOwner = book.owner_id === user.id;
+  let chaptersQuery = supabase
     .from("chapters")
     .select("*")
     .eq("book_id", bookId)
     .order("order_index", { ascending: true });
+
+  if (!isOwner) {
+    chaptersQuery = chaptersQuery.eq("status", "published");
+  }
+
+  const { data, error } = await chaptersQuery;
 
   if (error) return apiError(error.message, "SERVER_ERROR", 500);
 
@@ -52,6 +59,7 @@ export async function POST(request: NextRequest) {
     content_html?: string;
     content_raw?: string;
     order_index?: number;
+    status?: string;
   };
   try {
     body = await request.json();
@@ -59,7 +67,7 @@ export async function POST(request: NextRequest) {
     return apiError("Invalid JSON body", "VALIDATION_ERROR", 400);
   }
 
-  const { book_id, title, content_html, content_raw, order_index } = body;
+  const { book_id, title, content_html, content_raw, order_index, status } = body;
 
   if (!book_id || typeof book_id !== "string") {
     return apiError("book_id is required", "VALIDATION_ERROR", 400);
@@ -79,7 +87,7 @@ export async function POST(request: NextRequest) {
   // Verify book ownership
   const { data: book, error: bookError } = await supabase
     .from("books")
-    .select("owner_id, total_chapters, total_words")
+    .select("owner_id, total_chapters, total_words, content_type")
     .eq("id", book_id)
     .single();
 
@@ -89,6 +97,14 @@ export async function POST(request: NextRequest) {
   const sanitized = sanitizeContent(content_html);
   const word_count = countWords(sanitized);
   const slug = `chapter-${order_index + 1}-${Date.now()}`;
+
+  // Default status: 'published' for books, 'draft' for series (unless caller specifies)
+  const resolvedStatus =
+    status && ["draft", "published"].includes(status)
+      ? status
+      : book.content_type === "series"
+        ? "draft"
+        : "published";
 
   const { data: chapter, error: insertError } = await supabase
     .from("chapters")
@@ -100,6 +116,7 @@ export async function POST(request: NextRequest) {
       content_html: sanitized,
       content_raw: content_raw ?? null,
       word_count,
+      status: resolvedStatus,
     })
     .select()
     .single();

@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { PenLine, Upload } from "lucide-react";
-// [SUN-68] 시리즈 기능 — 추후 활성화
-// import { BookMarked } from "lucide-react";
+import { ArrowLeft, Upload } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Header } from "@/components/layout/Header";
+import { ScheduleSettings } from "@/components/series/ScheduleSettings";
 
 const LANGUAGES = [
   { value: "ko", label: "한국어" },
@@ -17,83 +16,54 @@ const LANGUAGES = [
   { value: "zh", label: "中文" },
 ];
 
-export default function CreatePage() {
+export default function CreateSeriesPage() {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [language, setLanguage] = useState("ko");
+  const [price, setPrice] = useState<number>(0);
+  const [scheduleDay, setScheduleDay] = useState("");
+  const [scheduleDescription, setScheduleDescription] = useState("");
   const [error, setError] = useState("");
   const [isCreating, setIsCreating] = useState(false);
-  const [price, setPrice] = useState<number>(0);
 
   const validate = (): boolean => {
     if (!title.trim()) {
-      setError("제목을 입력해주세요.");
+      setError("시리즈 제목을 입력해주세요.");
       return false;
     }
     setError("");
     return true;
   };
 
-  const handleUpload = () => {
-    if (!validate()) return;
-    const params = new URLSearchParams({ title, description, language, price: String(price) });
-    router.push(`/create/upload?${params.toString()}`);
-  };
-
-  const handleDirectWrite = async () => {
+  const handleCreate = async () => {
     if (!validate()) return;
     setIsCreating(true);
     setError("");
 
     try {
-      // 1. 콘텐츠 생성
-      const bookRes = await fetch("/api/books", {
+      const res = await fetch("/api/series", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: title.trim(),
           description: description.trim() || null,
           language,
-          source_type: "text",
           price,
+          schedule_day: scheduleDay || null,
+          schedule_description: scheduleDescription.trim() || null,
         }),
       });
 
-      if (!bookRes.ok) {
-        const json = await bookRes.json();
-        throw new Error(json.error ?? "콘텐츠 생성에 실패했습니다.");
+      if (!res.ok) {
+        const json = await res.json();
+        throw new Error(json.error ?? "시리즈 생성에 실패했습니다.");
       }
 
-      const bookJson = await bookRes.json();
-      const bookId = bookJson.data.id;
+      const json = await res.json();
+      const seriesId = json.data?.id;
 
-      // 2. 빈 챕터 생성 (실패 시 1회 재시도)
-      let chapterCreated = false;
-      for (let attempt = 0; attempt < 2; attempt++) {
-        const chapterRes = await fetch("/api/chapters", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            book_id: bookId,
-            title: "챕터 1",
-            content_html: "",
-            content_raw: "",
-            order_index: 0,
-          }),
-        });
-        if (chapterRes.ok) {
-          chapterCreated = true;
-          break;
-        }
-      }
-
-      if (!chapterCreated) {
-        console.warn("챕터 생성 실패 — 에디터에서 수동 추가 가능");
-      }
-
-      // 3. 에디터로 이동
-      router.push(`/create/edit/${bookId}`);
+      router.push(`/series/${seriesId}/manage`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "오류가 발생했습니다.");
     } finally {
@@ -106,29 +76,16 @@ export default function CreatePage() {
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-12 sm:px-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">새 콘텐츠 만들기</h1>
-          <p className="mt-2 text-gray-500">
-            콘텐츠의 기본 정보를 입력하세요.
-          </p>
+          <Link
+            href="/create"
+            className="mb-4 inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            뒤로
+          </Link>
+          <h1 className="text-3xl font-bold text-gray-900">새 시리즈 시작</h1>
+          <p className="mt-2 text-gray-500">연재 시리즈의 기본 정보를 입력하세요.</p>
         </div>
-
-        {/* [SUN-68] 시리즈 기능 — 추후 활성화 */}
-        {/* <div className="mb-6 rounded-2xl border border-[#FF5126]/20 bg-orange-50 p-5">
-          <div className="flex items-start gap-4">
-            <div className="rounded-xl bg-[#FF5126]/10 p-3">
-              <BookMarked className="h-6 w-6 text-[#FF5126]" />
-            </div>
-            <div className="flex-1">
-              <h2 className="font-semibold text-gray-900">연재 시리즈 시작하기</h2>
-              <p className="mt-1 text-sm text-gray-500">
-                챕터를 순서대로 발행하는 연재 시리즈를 만들 수 있습니다. 구독자에게 새 챕터 알림이 전송됩니다.
-              </p>
-              <Button asChild variant="outline" size="sm" className="mt-3 border-[#FF5126]/30 text-[#FF5126] hover:bg-[#FF5126]/5">
-                <Link href="/create/series">새 시리즈 시작</Link>
-              </Button>
-            </div>
-          </div>
-        </div> */}
 
         <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
           <div className="flex flex-col gap-5">
@@ -139,19 +96,17 @@ export default function CreatePage() {
             )}
 
             <Input
-              label="제목 *"
+              label="시리즈 제목 *"
               type="text"
-              placeholder="콘텐츠 제목을 입력하세요"
+              placeholder="시리즈 제목을 입력하세요"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-gray-700">
-                설명 (선택)
-              </label>
+              <label className="text-sm font-medium text-gray-700">설명 (선택)</label>
               <textarea
-                placeholder="콘텐츠에 대한 간단한 설명을 입력하세요"
+                placeholder="시리즈에 대한 간단한 설명을 입력하세요"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
@@ -175,9 +130,7 @@ export default function CreatePage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-gray-700">
-                가격 (원)
-              </label>
+              <label className="text-sm font-medium text-gray-700">가격 (원)</label>
               <div className="relative">
                 <input
                   type="number"
@@ -199,26 +152,24 @@ export default function CreatePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 pt-4">
+            <div className="border-t border-gray-100 pt-5">
+              <ScheduleSettings
+                scheduleDay={scheduleDay}
+                scheduleDescription={scheduleDescription}
+                onScheduleDayChange={setScheduleDay}
+                onScheduleDescriptionChange={setScheduleDescription}
+              />
+            </div>
+
+            <div className="pt-4">
               <Button
-                onClick={handleDirectWrite}
+                onClick={handleCreate}
                 isLoading={isCreating}
                 disabled={isCreating}
                 size="lg"
-                className="flex items-center justify-center gap-2 rounded-full"
+                className="w-full rounded-full"
               >
-                <PenLine className="h-4 w-4" />
-                직접 작성하기
-              </Button>
-              <Button
-                onClick={handleUpload}
-                disabled={isCreating}
-                variant="outline"
-                size="lg"
-                className="flex items-center justify-center gap-2"
-              >
-                <Upload className="h-4 w-4" />
-                파일 업로드하기
+                시리즈 만들기
               </Button>
             </div>
           </div>

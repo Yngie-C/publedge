@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
   // Fetch user's books
   const { data: books, error: booksError } = await supabase
     .from("books")
-    .select("id, title, total_chapters, total_words, status, visibility, created_at")
+    .select("id, title, total_chapters, total_words, status, visibility, created_at, content_type")
     .eq("owner_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -82,6 +82,7 @@ export async function GET(req: NextRequest) {
       id: book.id,
       title: book.title,
       status: book.status,
+      content_type: book.content_type,
       total_chapters: book.total_chapters,
       total_words: book.total_words,
       readers: uniqueBookReaders,

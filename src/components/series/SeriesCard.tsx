@@ -3,25 +3,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import type { Book } from "@/types";
-// [SUN-68] 시리즈 기능 — 추후 활성화
-// import type { SeriesMetadata } from "@/types";
+import type { Book, SeriesMetadata } from "@/types";
 
-interface BookWithAuthor extends Book {
+interface SeriesWithMeta extends Book {
   author_name?: string | null;
-  // [SUN-68] 시리즈 기능 — 추후 활성화
-  // series_metadata?: SeriesMetadata | null;
+  series_metadata?: SeriesMetadata | null;
+  subscriber_count?: number;
 }
 
-// [SUN-68] 시리즈 기능 — 추후 활성화
-// const SERIES_STATUS_LABELS: Record<string, { label: string; className: string }> = {
-//   ongoing: { label: "연재중", className: "bg-green-100/90 text-green-700" },
-//   hiatus: { label: "휴재", className: "bg-amber-100/90 text-amber-700" },
-//   completed: { label: "완결", className: "bg-blue-100/90 text-blue-700" },
-// };
-
-interface BookPreviewCardProps {
-  book: BookWithAuthor;
+interface SeriesCardProps {
+  series: SeriesWithMeta;
   className?: string;
 }
 
@@ -44,18 +35,23 @@ function getGradient(title: string): string {
   return GRADIENT_COLORS[Math.abs(hash) % GRADIENT_COLORS.length];
 }
 
-export function BookPreviewCard({ book, className }: BookPreviewCardProps) {
-  const gradient = getGradient(book.title);
-  // [SUN-68] 시리즈 기능 — 추후 활성화
-  // const isSeries = book.content_type === "series";
-  // const seriesStatus = book.series_metadata?.series_status;
-  // const seriesStatusInfo = seriesStatus ? SERIES_STATUS_LABELS[seriesStatus] : null;
-  // const href = isSeries ? `/series/${book.id}` : `/book/${book.id}`;
-  const href = `/book/${book.id}`;
+const STATUS_LABELS: Record<string, { label: string; className: string }> = {
+  ongoing: { label: "연재중", className: "bg-green-100 text-green-700" },
+  hiatus: { label: "휴재", className: "bg-amber-100 text-amber-700" },
+  completed: { label: "완결", className: "bg-blue-100 text-blue-700" },
+};
+
+export function SeriesCard({ series, className }: SeriesCardProps) {
+  const gradient = getGradient(series.title);
+  const meta = series.series_metadata;
+  const statusInfo = meta ? STATUS_LABELS[meta.series_status] : null;
+  const lastPublished = meta?.last_chapter_published_at
+    ? new Date(meta.last_chapter_published_at).toLocaleDateString("ko-KR")
+    : null;
 
   return (
     <Link
-      href={href}
+      href={`/series/${series.id}`}
       className={cn(
         "group flex flex-col overflow-hidden transition-all duration-300",
         "hover:-translate-y-2",
@@ -63,10 +59,10 @@ export function BookPreviewCard({ book, className }: BookPreviewCardProps) {
       )}
     >
       <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-gray-100 bg-gray-100 shadow-sm">
-        {book.cover_image_url ? (
+        {series.cover_image_url ? (
           <Image
-            src={book.cover_image_url}
-            alt={book.title}
+            src={series.cover_image_url}
+            alt={series.title}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -79,23 +75,25 @@ export function BookPreviewCard({ book, className }: BookPreviewCardProps) {
             )}
           >
             <span className="text-5xl font-bold text-white/50 select-none">
-              {book.title.charAt(0).toUpperCase()}
+              {series.title.charAt(0).toUpperCase()}
             </span>
           </div>
         )}
-        {/* [SUN-68] 시리즈 기능 — 추후 활성화 */}
-        {/* {seriesStatusInfo && (
+
+        {/* Series status badge */}
+        {statusInfo && (
           <div
             className={cn(
               "absolute left-3 top-3 rounded-md px-2 py-1 text-[10px] font-bold backdrop-blur",
-              seriesStatusInfo.className,
+              statusInfo.className,
             )}
           >
-            {seriesStatusInfo.label}
+            {statusInfo.label}
           </div>
-        )} */}
-        {/* 무료 뱃지만 노출 */}
-        {(!book.price || book.price === 0) && (
+        )}
+
+        {/* Free badge */}
+        {(!series.price || series.price === 0) && (
           <div className="absolute right-3 top-3 rounded-md bg-white/90 px-2 py-1 text-[10px] font-bold text-brand-600 backdrop-blur">
             FREE
           </div>
@@ -104,11 +102,15 @@ export function BookPreviewCard({ book, className }: BookPreviewCardProps) {
 
       <div className="mt-4 px-1">
         <h3 className="line-clamp-1 text-base font-bold text-gray-900 transition-colors group-hover:text-brand-600">
-          {book.title}
+          {series.title}
         </h3>
-        <p className="mt-1 text-sm text-gray-400">
-          {book.author_name || "Author"}
-        </p>
+        <p className="mt-1 text-sm text-gray-400">{series.author_name || "Author"}</p>
+        <div className="mt-1.5 flex items-center gap-2 text-xs text-gray-400">
+          {lastPublished && <span>최근 업데이트 {lastPublished}</span>}
+          {series.subscriber_count !== undefined && series.subscriber_count > 0 && (
+            <span>구독자 {series.subscriber_count.toLocaleString()}명</span>
+          )}
+        </div>
       </div>
     </Link>
   );
