@@ -57,7 +57,7 @@ export function Header() {
           {user && (
             <>
               <Link
-                href="/dashboard"
+                href="/my/purchases"
                 className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
               >
                 내 서재
@@ -121,10 +121,10 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <>
-              <Button variant="ghost" size="sm" asChild>
+              <Button variant="ghost" size="sm" className="rounded-full" asChild>
                 <Link href="/auth/login">로그인</Link>
               </Button>
-              <Button size="sm" asChild>
+              <Button size="sm" className="rounded-full" asChild>
                 <Link href="/auth/signup">회원가입</Link>
               </Button>
             </>
@@ -181,7 +181,7 @@ export function Header() {
             {user ? (
               <>
                 <Link
-                  href="/dashboard"
+                  href="/my/purchases"
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                   onClick={() => setMobileOpen(false)}
                 >
@@ -214,7 +214,7 @@ export function Header() {
                 </Link>
                 <Link
                   href="/auth/signup"
-                  className="rounded-lg bg-gray-900 px-3 py-2 text-center text-sm font-medium text-white hover:bg-gray-700"
+                  className="rounded-full bg-gray-900 px-3 py-2 text-center text-sm font-medium text-white hover:bg-gray-700"
                   onClick={() => setMobileOpen(false)}
                 >
                   회원가입
