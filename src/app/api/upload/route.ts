@@ -59,8 +59,8 @@ async function parseMdToChapters(text: string): Promise<ParsedChapter[]> {
   return splitHtmlIntoChapters(html, text);
 }
 
-async function parseDocxToChapters(buffer: ArrayBuffer): Promise<ParsedChapter[]> {
-  const result = await mammoth.convertToHtml({ arrayBuffer: buffer });
+async function parseDocxToChapters(arrayBuffer: ArrayBuffer): Promise<ParsedChapter[]> {
+  const result = await mammoth.convertToHtml({ buffer: Buffer.from(arrayBuffer) });
   return splitHtmlIntoChapters(result.value, "");
 }
 

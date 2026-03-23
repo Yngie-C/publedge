@@ -39,6 +39,9 @@ yarn-error.log*
 # omc state
 .omc/
 
+# test data
+/test-data/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
