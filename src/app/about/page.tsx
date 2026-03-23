@@ -56,10 +56,10 @@ const features = [
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16">
+    <div className="mx-auto max-w-5xl px-4 py-20">
       {/* Hero */}
       <section className="mb-20 text-center">
-        <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+        <h1 className="mb-4 font-logo text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
           텍스트를 전자책과 오디오북으로
         </h1>
         <p className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600">
@@ -77,9 +77,9 @@ export default function AboutPage() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="rounded-xl border border-gray-100 bg-gray-50 p-6"
+              className="rounded-2xl border border-gray-100 bg-white p-6 hover:-translate-y-2 hover:shadow-lg transition-all duration-300"
             >
-              <feature.icon className="mb-3 h-8 w-8 text-gray-700" />
+              <feature.icon className="mb-3 h-8 w-8 text-brand-600" />
               <h3 className="mb-2 text-lg font-semibold text-gray-900">
                 {feature.title}
               </h3>
@@ -118,7 +118,7 @@ export default function AboutPage() {
             },
           ].map((item) => (
             <div key={item.step} className="text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-900 text-lg font-bold text-white">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-600 text-lg font-bold text-white">
                 {item.step}
               </div>
               <h3 className="mb-2 text-lg font-semibold text-gray-900">
@@ -133,19 +133,23 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="rounded-2xl bg-gray-900 px-6 py-14 text-center">
-        <h2 className="mb-3 text-2xl font-bold text-white sm:text-3xl">
-          나만의 콘텐츠를 출판해보세요
-        </h2>
-        <p className="mb-8 text-gray-400">
-          누구나 무료로 시작할 수 있습니다. 글만 있으면 충분해요.
-        </p>
-        <Link
-          href="/auth/signup"
-          className="inline-block rounded-lg bg-white px-8 py-3 font-semibold text-gray-900 transition-colors hover:bg-gray-100"
-        >
-          무료로 시작하기
-        </Link>
+      <section className="relative overflow-hidden rounded-2xl border-2 border-brand-100 bg-white px-6 py-14 text-center">
+        <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-brand-200 opacity-30 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 h-40 w-40 rounded-full bg-brand-200 opacity-30 blur-3xl" />
+        <div className="relative">
+          <h2 className="mb-3 text-2xl font-bold text-gray-900 sm:text-3xl">
+            나만의 콘텐츠를 출판해보세요
+          </h2>
+          <p className="mb-8 text-gray-500">
+            누구나 무료로 시작할 수 있습니다. 글만 있으면 충분해요.
+          </p>
+          <Link
+            href="/auth/signup"
+            className="inline-block rounded-full bg-brand-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-brand-700"
+          >
+            무료로 시작하기
+          </Link>
+        </div>
       </section>
     </div>
   );

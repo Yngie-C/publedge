@@ -35,9 +35,9 @@ export function BookGrid({ books }: BookGridProps) {
   if (books.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
-        <div className="mb-4 rounded-full bg-gray-100 p-6">
+        <div className="mb-4 rounded-full bg-brand-50 p-6">
           <svg
-            className="h-10 w-10 text-gray-400"
+            className="h-10 w-10 text-brand-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

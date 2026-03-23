@@ -131,7 +131,7 @@ export default function CheckoutPage() {
     <div className="mx-auto max-w-lg px-4 py-12">
       <h1 className="mb-8 text-2xl font-bold text-gray-900">결제하기</h1>
 
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
         {/* 책 정보 */}
         <div className="mb-6 border-b border-gray-100 pb-6">
           <h2 className="text-lg font-semibold text-gray-900">{book.title}</h2>
@@ -155,7 +155,7 @@ export default function CheckoutPage() {
         )}
 
         {/* 환불 정책 안내 */}
-        <div className="mb-4 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-600">
+        <div className="mb-4 rounded-xl bg-gray-50 px-4 py-3 text-sm text-gray-600">
           <p className="mb-1">
             디지털 콘텐츠 특성상 콘텐츠 열람 후에는 환불이 제한됩니다.
           </p>
@@ -187,7 +187,7 @@ export default function CheckoutPage() {
           isLoading={paying}
           disabled={paying || !agreed}
           size="lg"
-          className="w-full"
+          className="w-full rounded-full bg-brand-600 hover:bg-brand-700 text-white"
         >
           {book.price.toLocaleString("ko-KR")}원 결제하기
         </Button>

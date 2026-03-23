@@ -80,7 +80,7 @@ function UploadContent() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-white">
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-12 sm:px-6">
         <div className="mb-8">
@@ -90,12 +90,12 @@ function UploadContent() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+        <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
           <div className="flex flex-col gap-6">
             <FileDropzone onFileSelect={handleFileSelect} />
 
             {error && (
-              <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                 {error}
               </div>
             )}
@@ -118,7 +118,7 @@ function UploadContent() {
 
             {/* Chapter preview */}
             {chapters.length > 0 && (
-              <div className="rounded-lg border border-green-200 bg-green-50 p-4">
+              <div className="rounded-xl border border-green-200 bg-green-50 p-4">
                 <div className="mb-3 flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-green-600" />
                   <span className="font-medium text-green-800">

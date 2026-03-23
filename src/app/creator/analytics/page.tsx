@@ -87,7 +87,7 @@ export default function AnalyticsPage() {
               className={cn(
                 "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
                 period === opt.value
-                  ? "bg-gray-900 text-white"
+                  ? "bg-brand-600 text-white"
                   : "text-gray-600 hover:bg-gray-100",
               )}
             >
@@ -166,7 +166,7 @@ export default function AnalyticsPage() {
                 {data.highlights.map((h, i) => (
                   <div
                     key={i}
-                    className="flex gap-3 rounded-xl border border-gray-200 bg-white p-4"
+                    className="flex gap-3 rounded-2xl border border-gray-200 bg-white p-4"
                   >
                     <Highlighter className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-400" />
                     <p className="text-sm leading-relaxed text-gray-700 line-clamp-3">

@@ -80,7 +80,7 @@ export default function PurchasesPage() {
           <p className="text-sm text-gray-400">결제가 완료되면 여기에 표시됩니다.</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>

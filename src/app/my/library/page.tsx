@@ -78,14 +78,14 @@ export default function LibraryPage() {
           <Spinner size="lg" />
         </div>
       ) : isError ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center text-red-700">
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center text-red-700">
           구매 목록을 불러오지 못했습니다.{" "}
           <button onClick={() => refetch()} className="underline">
             다시 시도
           </button>
         </div>
       ) : purchases.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-gray-300 bg-white py-20 text-center">
+        <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-gray-200 bg-white py-20 text-center">
           <ShoppingBag className="h-16 w-16 text-gray-300" />
           <div>
             <p className="text-lg font-semibold text-gray-700">
@@ -109,7 +109,7 @@ export default function LibraryPage() {
             return (
               <div
                 key={purchase.id}
-                className="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-2 hover:shadow-lg"
               >
                 {/* Cover */}
                 <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">

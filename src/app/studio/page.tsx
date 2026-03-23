@@ -92,7 +92,7 @@ export default function StudioPage() {
             onClick={() => setActiveTab(key)}
             className={
               activeTab === key
-                ? "rounded-md bg-gray-900 px-4 py-1.5 text-sm font-medium text-white"
+                ? "rounded-md bg-brand-600 px-4 py-1.5 text-sm font-medium text-white"
                 : "rounded-md px-4 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100"
             }
           >
@@ -146,13 +146,13 @@ export default function StudioPage() {
             <div className="space-y-6">
               {/* Summary cards */}
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-2 max-w-md">
-                <div className="rounded-xl border border-gray-200 bg-white p-5">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5">
                   <p className="text-sm text-gray-500">총 판매액</p>
                   <p className="mt-1 text-2xl font-bold text-gray-900">
                     ₩{salesData.totalRevenue.toLocaleString()}
                   </p>
                 </div>
-                <div className="rounded-xl border border-gray-200 bg-white p-5">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5">
                   <p className="text-sm text-gray-500">총 판매 건수</p>
                   <p className="mt-1 text-2xl font-bold text-gray-900">
                     {salesData.totalSales.toLocaleString()}건
@@ -161,7 +161,7 @@ export default function StudioPage() {
               </div>
 
               {/* Per-book stats table */}
-              <div className="rounded-xl border border-gray-200 bg-white overflow-hidden">
+              <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
                 <table className="w-full text-sm">
                   <thead className="border-b border-gray-200 bg-gray-50">
                     <tr>

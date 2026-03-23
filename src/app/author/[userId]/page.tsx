@@ -83,7 +83,7 @@ export default function AuthorPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6">
       {/* Author profile header */}
       <div className="mb-10 flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6">
         {/* Avatar */}
@@ -109,7 +109,7 @@ export default function AuthorPage() {
 
         {/* Info */}
         <div className="flex flex-1 flex-col gap-2">
-          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+          <h1 className="font-logo text-2xl font-bold text-gray-900 sm:text-3xl">
             {displayName}
           </h1>
           {profile?.bio && (
@@ -142,7 +142,7 @@ export default function AuthorPage() {
                 <Link
                   key={book.id}
                   href={`/book/${book.id}`}
-                  className="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+                  className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all duration-300"
                 >
                   <div className="relative aspect-[3/4] w-full overflow-hidden">
                     {book.cover_image_url ? (

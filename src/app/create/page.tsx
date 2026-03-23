@@ -99,7 +99,7 @@ export default function CreatePage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-white">
       <Header />
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-12 sm:px-6">
         <div className="mb-8">
@@ -109,7 +109,7 @@ export default function CreatePage() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+        <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
           <div className="flex flex-col gap-5">
             {error && (
               <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -184,7 +184,7 @@ export default function CreatePage() {
                 isLoading={isCreating}
                 disabled={isCreating}
                 size="lg"
-                className="flex items-center justify-center gap-2"
+                className="flex items-center justify-center gap-2 rounded-full"
               >
                 <PenLine className="h-4 w-4" />
                 직접 작성하기

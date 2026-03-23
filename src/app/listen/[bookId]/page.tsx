@@ -157,23 +157,23 @@ export default function ListenPage() {
   // ── TTS generation ──────────────────────────────────────────────────────
 
   const handleGenerate = useCallback(
-    async (voiceId: string) => {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
-
-      const { error } = await supabase.from("audiobooks").insert({
-        book_id: bookId,
-        voice_id: voiceId,
-        voice_provider: "openai",
-        status: "pending",
+    async (voiceId: string, voiceProvider?: string, customVoiceId?: string) => {
+      const response = await fetch("/api/tts/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          book_id: bookId,
+          voice_id: voiceId,
+          voice_provider: voiceProvider ?? "qwen3",
+          custom_voice_id: customVoiceId,
+        }),
       });
 
-      if (error) throw new Error(error.message);
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "오디오북 생성에 실패했습니다.");
+      }
 
-      // Re-fetch to get the new audiobook record
       await fetchData();
     },
     [bookId, fetchData]

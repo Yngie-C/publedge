@@ -83,7 +83,7 @@ export function SearchBar({ filters, onFiltersChange, className }: SearchBarProp
             value={localQuery}
             onChange={(e) => handleQueryChange(e.target.value)}
             placeholder="제목이나 설명으로 검색..."
-            className="h-10 w-full rounded-lg border border-gray-300 bg-white pl-10 pr-10 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
+            className="h-10 w-full rounded-full border border-gray-300 bg-white pl-10 pr-10 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/20"
           />
           {localQuery && (
             <button
@@ -99,7 +99,7 @@ export function SearchBar({ filters, onFiltersChange, className }: SearchBarProp
           className={cn(
             "flex h-10 items-center gap-2 rounded-lg border px-3 text-sm font-medium transition-colors",
             showFilters
-              ? "border-gray-900 bg-gray-900 text-white"
+              ? "border-brand-600 bg-brand-600 text-white"
               : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50",
           )}
         >
@@ -122,7 +122,7 @@ export function SearchBar({ filters, onFiltersChange, className }: SearchBarProp
                   className={cn(
                     "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
                     filters.sort === opt.value
-                      ? "bg-gray-900 text-white"
+                      ? "bg-brand-600 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200",
                   )}
                 >
@@ -145,7 +145,7 @@ export function SearchBar({ filters, onFiltersChange, className }: SearchBarProp
                   className={cn(
                     "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
                     filters.priceRange === range.value
-                      ? "bg-gray-900 text-white"
+                      ? "bg-brand-600 text-white"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200",
                   )}
                 >

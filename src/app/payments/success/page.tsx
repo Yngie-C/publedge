@@ -69,7 +69,7 @@ export default function PaymentSuccessPage() {
       <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
         <p className="text-lg font-medium text-red-700">결제 처리 실패</p>
         <p className="mt-2 text-sm text-gray-500">{errorMessage}</p>
-        <Button variant="outline" className="mt-6" onClick={() => router.push("/explore")}>
+        <Button variant="outline" className="mt-6 rounded-full" onClick={() => router.push("/explore")}>
           둘러보기로 이동
         </Button>
       </div>
@@ -79,17 +79,17 @@ export default function PaymentSuccessPage() {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
       <CheckCircle2 className="mb-4 h-16 w-16 text-green-500" />
-      <h1 className="text-2xl font-bold text-gray-900">결제가 완료되었습니다!</h1>
+      <h1 className="font-logo text-2xl font-bold text-gray-900">결제가 완료되었습니다!</h1>
       <p className="mt-2 text-sm text-gray-500">
         구매한 콘텐츠를 바로 읽어보세요.
       </p>
       <div className="mt-6 flex gap-3">
         {bookId && (
-          <Button onClick={() => router.push(`/reader/${bookId}`)}>
+          <Button className="rounded-full" onClick={() => router.push(`/reader/${bookId}`)}>
             바로 읽기
           </Button>
         )}
-        <Button variant="outline" onClick={() => router.push("/library")}>
+        <Button variant="outline" className="rounded-full" onClick={() => router.push("/library")}>
           내 서재로 이동
         </Button>
       </div>

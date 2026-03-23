@@ -183,7 +183,7 @@ export default function EditPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-white">
       <Header />
 
       {/* Top bar */}
@@ -248,8 +248,8 @@ export default function EditPage() {
                 onClick={() => selectChapter(ch)}
                 className={`group flex cursor-pointer items-center gap-2 px-3 py-2.5 text-sm transition-colors ${
                   selectedId === ch.id
-                    ? "bg-gray-900 text-white"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    ? "bg-brand-50 text-brand-700"
+                    : "text-gray-600 hover:bg-brand-50/50 hover:text-gray-900"
                 }`}
               >
                 <GripVertical className="h-4 w-4 shrink-0 opacity-40" />
@@ -261,7 +261,7 @@ export default function EditPage() {
                   }}
                   className={`rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 ${
                     selectedId === ch.id
-                      ? "hover:bg-white/20"
+                      ? "hover:bg-brand-100"
                       : "text-red-500 hover:bg-red-50"
                   }`}
                 >

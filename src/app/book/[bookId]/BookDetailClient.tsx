@@ -227,7 +227,7 @@ export function BookDetailClient() {
       : 0;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
       {/* Book header */}
       <div className="flex flex-col gap-8 sm:flex-row">
         {/* Cover */}
@@ -276,7 +276,7 @@ export function BookDetailClient() {
             )}
           </div>
 
-          <h1 className="mb-1 text-2xl font-bold text-gray-900 sm:text-3xl">
+          <h1 className="mb-1 font-logo text-2xl font-bold text-gray-900 sm:text-3xl">
             {book.title}
           </h1>
 
@@ -424,7 +424,7 @@ export function BookDetailClient() {
           {chapters.length === 0 ? (
             <p className="text-sm text-gray-400">챕터가 없습니다.</p>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
               {displayChapters.map((chapter, idx) => (
                 <div
                   key={chapter.id}
@@ -480,7 +480,7 @@ export function BookDetailClient() {
               {reviews.map((review) => (
                 <div
                   key={review.id}
-                  className="rounded-xl border border-gray-200 bg-white p-5"
+                  className="rounded-2xl border border-gray-200 bg-white p-5"
                 >
                   <div className="mb-2 flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -600,7 +600,7 @@ function OtherBooksByAuthor({
             <Link
               key={b.id}
               href={`/book/${b.id}`}
-              className="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all duration-300"
             >
               <div className="relative aspect-[3/4] w-full overflow-hidden">
                 {b.cover_image_url ? (

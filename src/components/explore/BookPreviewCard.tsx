@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { BookOpen, FileText, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Book } from "@/types";
 
@@ -14,7 +13,6 @@ interface BookPreviewCardProps {
   book: BookWithAuthor;
   className?: string;
 }
-
 
 const GRADIENT_COLORS = [
   "from-blue-400 to-indigo-600",
@@ -35,25 +33,19 @@ function getGradient(title: string): string {
   return GRADIENT_COLORS[Math.abs(hash) % GRADIENT_COLORS.length];
 }
 
-function estimatedReadingTime(words: number): number {
-  return Math.max(1, Math.round(words / 200));
-}
-
 export function BookPreviewCard({ book, className }: BookPreviewCardProps) {
   const gradient = getGradient(book.title);
-  const readingMinutes = estimatedReadingTime(book.total_words);
 
   return (
     <Link
       href={`/book/${book.id}`}
       className={cn(
-        "group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm",
-        "transition-all duration-200 hover:-translate-y-1 hover:shadow-lg",
+        "group flex flex-col overflow-hidden transition-all duration-300",
+        "hover:-translate-y-2",
         className,
       )}
     >
-      {/* Cover image */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-gray-100 bg-gray-100 shadow-sm">
         {book.cover_image_url ? (
           <Image
             src={book.cover_image_url}
@@ -69,53 +61,26 @@ export function BookPreviewCard({ book, className }: BookPreviewCardProps) {
               gradient,
             )}
           >
-            <span className="text-6xl font-bold text-white/80 select-none">
+            <span className="text-5xl font-bold text-white/50 select-none">
               {book.title.charAt(0).toUpperCase()}
             </span>
           </div>
         )}
+        {/* 무료 뱃지만 노출 */}
+        {(!book.price || book.price === 0) && (
+          <div className="absolute right-3 top-3 rounded-md bg-white/90 px-2 py-1 text-[10px] font-bold text-brand-600 backdrop-blur">
+            FREE
+          </div>
+        )}
       </div>
 
-      {/* Content */}
-      <div className="flex flex-1 flex-col p-4">
-        <h3 className="mb-1 line-clamp-2 text-sm font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
+      <div className="mt-4 px-1">
+        <h3 className="line-clamp-1 text-base font-bold text-gray-900 transition-colors group-hover:text-brand-600">
           {book.title}
         </h3>
-        {book.author_name && (
-          <p className="mb-2 text-xs text-gray-500">{book.author_name}</p>
-        )}
-        {book.description && (
-          <p className="mb-3 line-clamp-2 flex-1 text-xs leading-relaxed text-gray-600">
-            {book.description}
-          </p>
-        )}
-
-        {/* Price */}
-        <div className="mb-2">
-          {book.price != null && book.price > 0 ? (
-            <span className="text-sm font-bold text-gray-900">
-              {book.price.toLocaleString("ko-KR")}원
-            </span>
-          ) : (
-            <span className="text-sm font-medium text-green-600">무료</span>
-          )}
-        </div>
-
-        {/* Stats */}
-        <div className="mt-auto flex items-center gap-3 text-xs text-gray-400">
-          <span className="flex items-center gap-1">
-            <BookOpen className="h-3 w-3" />
-            {book.total_chapters}챕터
-          </span>
-          <span className="flex items-center gap-1">
-            <FileText className="h-3 w-3" />
-            {book.total_words.toLocaleString()}자
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock className="h-3 w-3" />
-            {readingMinutes}분
-          </span>
-        </div>
+        <p className="mt-1 text-sm text-gray-400">
+          {book.author_name || "Author"}
+        </p>
       </div>
     </Link>
   );

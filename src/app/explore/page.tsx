@@ -79,12 +79,12 @@ function PopularBooksSection() {
   if (isLoading) {
     return (
       <div className="mb-10">
-        <h2 className="mb-4 text-lg font-semibold text-gray-900">인기 책</h2>
+        <h2 className="mb-4 font-logo text-xl font-bold text-gray-900">인기 책</h2>
         <div className="flex gap-4 overflow-x-auto pb-2">
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="flex-shrink-0 w-36 h-56 rounded-xl bg-gray-100 animate-pulse"
+              className="flex-shrink-0 w-36 h-56 rounded-2xl bg-gray-100 animate-pulse"
             />
           ))}
         </div>
@@ -96,7 +96,7 @@ function PopularBooksSection() {
 
   return (
     <div className="mb-10">
-      <h2 className="mb-4 text-lg font-semibold text-gray-900">인기 책</h2>
+      <h2 className="mb-4 font-logo text-xl font-bold text-gray-900">인기 책</h2>
       <div className="flex gap-4 overflow-x-auto pb-2">
         {books.map((book) => {
           const gradient = getGradient(book.title);
@@ -104,7 +104,7 @@ function PopularBooksSection() {
             <Link
               key={book.id}
               href={`/book/${book.id}`}
-              className="group flex-shrink-0 w-36 flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+              className="group flex-shrink-0 w-36 flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm hover:-translate-y-2 hover:shadow-lg transition-all duration-300"
             >
               <div className="relative h-48 w-full overflow-hidden">
                 {book.cover_image_url ? (
@@ -236,7 +236,7 @@ function ExploreContent() {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-40"
+            className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-40"
           >
             이전
           </button>
@@ -257,9 +257,9 @@ function ExploreContent() {
                 <button
                   key={pageNum}
                   onClick={() => setPage(pageNum)}
-                  className={`h-9 w-9 rounded-lg text-sm font-medium transition-colors ${
+                  className={`h-9 w-9 rounded-full text-sm font-medium transition-colors ${
                     pageNum === page
-                      ? "bg-gray-900 text-white"
+                      ? "bg-brand-600 text-white"
                       : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
                   }`}
                 >
@@ -272,7 +272,7 @@ function ExploreContent() {
           <button
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-40"
+            className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-40"
           >
             다음
           </button>

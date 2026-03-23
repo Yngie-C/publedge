@@ -79,7 +79,7 @@ export default function CreatorPage() {
 
       {/* Stats cards */}
       <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-gray-200 bg-white p-6">
+        <div className="rounded-2xl border border-gray-100 bg-white p-6">
           <div className="flex items-center gap-3">
             <div className="rounded-lg bg-blue-100 p-2">
               <BookOpen className="h-5 w-5 text-blue-600" />
@@ -90,7 +90,7 @@ export default function CreatorPage() {
             </div>
           </div>
         </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-6">
+        <div className="rounded-2xl border border-gray-100 bg-white p-6">
           <div className="flex items-center gap-3">
             <div className="rounded-lg bg-green-100 p-2">
               <TrendingUp className="h-5 w-5 text-green-600" />
@@ -101,7 +101,7 @@ export default function CreatorPage() {
             </div>
           </div>
         </div>
-        <div className="rounded-xl border border-gray-200 bg-white p-6 col-span-2 sm:col-span-1">
+        <div className="rounded-2xl border border-gray-100 bg-white p-6 col-span-2 sm:col-span-1">
           <div className="flex items-center gap-3">
             <div className="rounded-lg bg-amber-100 p-2">
               <DollarSign className="h-5 w-5 text-amber-600" />
@@ -122,14 +122,14 @@ export default function CreatorPage() {
           <Spinner size="lg" />
         </div>
       ) : isError ? (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center text-red-700">
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center text-red-700">
           콘텐츠 목록을 불러오지 못했습니다.{" "}
           <button onClick={() => refetch()} className="underline">
             다시 시도
           </button>
         </div>
       ) : books.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-gray-300 bg-white py-20 text-center">
+        <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-gray-200 bg-white py-20 text-center">
           <BookOpen className="h-16 w-16 text-gray-300" />
           <div>
             <p className="text-lg font-semibold text-gray-700">아직 콘텐츠가 없습니다</p>
