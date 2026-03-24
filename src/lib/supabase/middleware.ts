@@ -37,7 +37,10 @@ export async function updateSession(request: NextRequest) {
     const { data } = await supabase.auth.getUser();
     user = data.user;
   } catch {
-    // 동시 요청 시 lock 충돌 (AbortError) — 무시하고 비인증으로 처리
+    // 동시 요청 시 lock 충돌 (AbortError) — getSession()으로 폴백
+    // getSession()은 JWT를 로컬에서 읽으므로 lock이 필요 없음
+    const { data: sessionData } = await supabase.auth.getSession();
+    user = sessionData.session?.user ?? null;
   }
 
   const protectedRoutes = ["/dashboard", "/create", "/settings", "/reader", "/listen", "/my", "/creator"];

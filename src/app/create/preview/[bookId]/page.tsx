@@ -10,9 +10,12 @@ export default async function PreviewPage({ params }: Props) {
   const { bookId } = await params;
   const supabase = await createClient();
 
+  // getUser() 대신 getSession()을 사용 — 미들웨어가 이미 인증을 검증했으므로
+  // JWT에서 user 정보만 읽어 lock 충돌(AbortError: 'steal')을 방지
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+  const user = session?.user;
   if (!user) redirect("/auth/login");
 
   const { data: book } = await supabase
