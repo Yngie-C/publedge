@@ -46,7 +46,8 @@
   --color-brand-primary-border: var(--brand-200);
 }
 
-@media (prefers-color-scheme: dark) {
+/* 다크 모드 비활성화 — 전체 라이트 모드 강제 */
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
@@ -57,7 +58,7 @@
     --brand-700: #FF5126;
     --brand-800: #E8421B;
   }
-}
+} */
 
 body {
   background: var(--background);

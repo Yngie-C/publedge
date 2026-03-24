@@ -240,7 +240,7 @@ export function BookDetailClient() {
       : 0;
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+    <div className="min-h-screen bg-white mx-auto max-w-5xl px-4 py-16 sm:px-6">
       {/* Book header */}
       <div className="flex flex-col gap-8 sm:flex-row">
         {/* Cover */}

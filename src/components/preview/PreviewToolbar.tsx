@@ -1,18 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Monitor, Tablet, Smartphone, BookOpen, Eye } from "lucide-react";
+import { ArrowLeft, Monitor, Tablet, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-type ViewMode = "detail" | "reader";
 type Viewport = "desktop" | "tablet" | "mobile";
 
 interface Props {
   bookId: string;
   bookTitle: string;
-  viewMode: ViewMode;
-  onViewModeChange: (mode: ViewMode) => void;
   viewport: Viewport;
   onViewportChange: (vp: Viewport) => void;
 }
@@ -26,8 +23,6 @@ const viewports: { key: Viewport; icon: typeof Monitor; label: string }[] = [
 export function PreviewToolbar({
   bookId,
   bookTitle,
-  viewMode,
-  onViewModeChange,
   viewport,
   onViewportChange,
 }: Props) {
@@ -44,34 +39,6 @@ export function PreviewToolbar({
         <span className="hidden text-sm font-medium text-gray-600 sm:block">
           {bookTitle}
         </span>
-      </div>
-
-      {/* Center: view mode toggle */}
-      <div className="flex items-center gap-1 rounded-lg border border-gray-200 bg-gray-50 p-0.5">
-        <button
-          onClick={() => onViewModeChange("detail")}
-          className={cn(
-            "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
-            viewMode === "detail"
-              ? "bg-white text-gray-900 shadow-sm"
-              : "text-gray-500 hover:text-gray-700"
-          )}
-        >
-          <BookOpen className="h-3.5 w-3.5" />
-          책 상세
-        </button>
-        <button
-          onClick={() => onViewModeChange("reader")}
-          className={cn(
-            "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
-            viewMode === "reader"
-              ? "bg-white text-gray-900 shadow-sm"
-              : "text-gray-500 hover:text-gray-700"
-          )}
-        >
-          <Eye className="h-3.5 w-3.5" />
-          리더
-        </button>
       </div>
 
       {/* Right: viewport toggle */}

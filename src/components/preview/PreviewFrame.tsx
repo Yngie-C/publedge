@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-type ViewMode = "detail" | "reader";
 type Viewport = "desktop" | "tablet" | "mobile";
 
 const VIEWPORT_WIDTHS: Record<Viewport, number> = {
@@ -15,11 +14,10 @@ const VIEWPORT_WIDTHS: Record<Viewport, number> = {
 
 interface Props {
   bookId: string;
-  viewMode: ViewMode;
   viewport: Viewport;
 }
 
-export function PreviewFrame({ bookId, viewMode, viewport }: Props) {
+export function PreviewFrame({ bookId, viewport }: Props) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
@@ -27,10 +25,7 @@ export function PreviewFrame({ bookId, viewMode, viewport }: Props) {
   const [scale, setScale] = useState(1);
 
   const iframeWidth = VIEWPORT_WIDTHS[viewport];
-
-  // Compute the base URL for the iframe
-  const basePath = viewMode === "detail" ? `/book/${bookId}` : `/reader/${bookId}`;
-  const iframeSrc = `${basePath}?viewAs=customer`;
+  const iframeSrc = `/reader/${bookId}`;
 
   // Allowed URL patterns for navigation guard
   const allowedPatterns = [`/book/${bookId}`, `/reader/${bookId}`];
@@ -39,7 +34,7 @@ export function PreviewFrame({ bookId, viewMode, viewport }: Props) {
   useEffect(() => {
     const updateScale = () => {
       if (!containerRef.current) return;
-      const containerWidth = containerRef.current.clientWidth - 48; // padding
+      const containerWidth = containerRef.current.clientWidth - 48;
       const newScale = Math.min(1, containerWidth / iframeWidth);
       setScale(newScale);
     };
@@ -57,8 +52,6 @@ export function PreviewFrame({ bookId, viewMode, viewport }: Props) {
 
   // Navigation guard: poll contentWindow.location for soft navigation
   useEffect(() => {
-    if (viewMode !== "reader") return;
-
     const iframe = iframeRef.current;
     if (!iframe) return;
 
@@ -72,16 +65,15 @@ export function PreviewFrame({ bookId, viewMode, viewport }: Props) {
         );
 
         if (!isAllowed) {
-          // Soft navigation detected to disallowed URL — reset
           iframe.src = iframeSrc;
         }
       } catch {
-        // Cross-origin or iframe not ready — ignore
+        // Cross-origin or iframe not ready
       }
     }, 500);
 
     return () => clearInterval(interval);
-  }, [viewMode, iframeSrc, allowedPatterns]);
+  }, [iframeSrc, allowedPatterns]);
 
   const handleLoad = useCallback(() => {
     setLoading(false);
@@ -146,11 +138,6 @@ export function PreviewFrame({ bookId, viewMode, viewport }: Props) {
                 다시 시도
               </Button>
             </div>
-          )}
-
-          {/* Interaction overlay for detail view only */}
-          {viewMode === "detail" && !loading && !error && (
-            <div className="absolute inset-0 z-10" />
           )}
 
           {/* iframe */}
