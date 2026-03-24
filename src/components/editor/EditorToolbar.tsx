@@ -103,7 +103,7 @@ export function EditorToolbar({ editor, onImageUpload }: EditorToolbarProps) {
       >
         <Underline className="h-4 w-4" />
       </ToolbarButton>
-      <ToolbarButton
+      {/* <ToolbarButton
         onClick={() => editor.chain().focus().toggleStrike().run()}
         isActive={editor.isActive("strike")}
         title="취소선"
@@ -116,7 +116,7 @@ export function EditorToolbar({ editor, onImageUpload }: EditorToolbarProps) {
         title="형광펜"
       >
         <Highlighter className="h-4 w-4" />
-      </ToolbarButton>
+      </ToolbarButton> */}
 
       <ToolbarDivider />
 
