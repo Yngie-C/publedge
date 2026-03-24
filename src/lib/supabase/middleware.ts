@@ -32,9 +32,13 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // 동시 요청 시 lock 충돌 (AbortError) — 무시하고 비인증으로 처리
+  }
 
   const protectedRoutes = ["/dashboard", "/create", "/settings", "/reader", "/listen", "/my", "/creator"];
   const isProtected = protectedRoutes.some((route) =>
