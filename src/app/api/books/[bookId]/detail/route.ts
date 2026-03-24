@@ -10,15 +10,10 @@ export async function GET(
   const supabase = await createClient();
   const user = await getAuthUser();
 
-  // Fetch book with owner profile
+  // Fetch book
   const { data: bookData, error: bookError } = await supabase
     .from("books")
-    .select(
-      `
-      *,
-      user_profiles!owner_id ( display_name )
-    `,
-    )
+    .select("*")
     .eq("id", bookId)
     .single();
 
@@ -35,17 +30,14 @@ export async function GET(
     return apiError("Book not found", "NOT_FOUND", 404);
   }
 
-  // Flatten author name
-  const profiles = bookData.user_profiles as
-    | { display_name: string | null }
-    | { display_name: string | null }[]
-    | null;
-  const authorName = Array.isArray(profiles)
-    ? profiles[0]?.display_name ?? null
-    : profiles?.display_name ?? null;
+  // Fetch author name separately (no FK between books.owner_id and user_profiles.user_id)
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select("display_name")
+    .eq("user_id", bookData.owner_id)
+    .maybeSingle();
 
-  const { user_profiles: _p, ...bookRest } = bookData;
-  const book = { ...bookRest, author_name: authorName };
+  const book = { ...bookData, author_name: profile?.display_name ?? null };
 
   // Fetch chapters (non-owners only see published chapters)
   let chaptersQuery = supabase

@@ -74,7 +74,9 @@ function getGradient(title: string): string {
 }
 
 async function fetchBookDetail(bookId: string): Promise<BookDetailData> {
-  const res = await fetch(`/api/books/${bookId}/detail`);
+  const res = await fetch(`/api/books/${bookId}/detail`, {
+    credentials: "include",
+  });
   if (!res.ok) throw new Error("콘텐츠 정보를 불러오지 못했습니다.");
   const json = await res.json();
   return json.data;
