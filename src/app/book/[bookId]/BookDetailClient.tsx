@@ -147,8 +147,10 @@ function StarRating({
 export function BookDetailClient() {
   const { bookId } = useParams<{ bookId: string }>();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const user = useAuthStore((s) => s.user);
   const queryClient = useQueryClient();
+  const viewAs = searchParams.get("viewAs");
 
   const [showAllChapters, setShowAllChapters] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -222,8 +224,6 @@ export function BookDetailClient() {
   }
 
   const { book, chapters, audiobook, reviews, series_metadata, subscriber_count, published_chapter_count, is_subscribed } = data;
-  const searchParams = useSearchParams();
-  const viewAs = searchParams.get("viewAs");
   const isOwner = viewAs === "customer" ? false : user?.id === book.owner_id;
   // [SUN-68] 시리즈 기능 — 추후 활성화
   const isSeries = false; // book.content_type === "series";
