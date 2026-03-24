@@ -330,37 +330,39 @@ export default function EditPage() {
       </div>
 
       {/* Book metadata side panel */}
-      {metaOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-30 bg-black/20"
-            onClick={() => setMetaOpen(false)}
-          />
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 z-30 bg-black/20 transition-opacity duration-300 ${
+          metaOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={() => setMetaOpen(false)}
+      />
 
-          {/* Panel */}
-          <div className="fixed right-0 top-0 z-40 flex h-full w-full max-w-sm flex-col border-l border-gray-200 bg-white shadow-xl">
-            <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4">
-              <h2 className="text-base font-semibold text-gray-900">책 설정</h2>
-              <button
-                type="button"
-                onClick={() => setMetaOpen(false)}
-                className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4">
-              {book && (
-                <BookMetadataForm
-                  book={book}
-                  onSave={handleMetaSave}
-                />
-              )}
-            </div>
-          </div>
-        </>
-      )}
+      {/* Panel */}
+      <div
+        className={`fixed right-0 top-0 z-40 flex h-full w-full max-w-sm flex-col border-l border-gray-200 bg-white shadow-xl transition-transform duration-300 ease-in-out ${
+          metaOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between border-b border-gray-200 px-4 py-4">
+          <h2 className="text-base font-semibold text-gray-900">책 설정</h2>
+          <button
+            type="button"
+            onClick={() => setMetaOpen(false)}
+            className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 py-4">
+          {book && (
+            <BookMetadataForm
+              book={book}
+              onSave={handleMetaSave}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
