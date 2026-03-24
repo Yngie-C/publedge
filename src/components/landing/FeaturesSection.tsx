@@ -3,7 +3,7 @@ import { FileText, Headphones, Globe } from "lucide-react";
 export function FeaturesSection() {
   const features = [
     { icon: FileText, title: "전자책", desc: "어디서든 편하게 읽을 수 있는 모던한 리딩 경험." },
-    { icon: Headphones, title: "AI 오디오북", desc: "눈이 바쁠 때, 귀로 듣는 고품질 AI 낭독." },
+    { icon: Headphones, title: "오디오북", desc: "눈이 바쁠 때, 귀로 듣는 고품질 낭독." },
     { icon: Globe, title: "매일 새로운 발견", desc: "다양한 크리에이터의 이야기를 만나보세요." },
   ];
 

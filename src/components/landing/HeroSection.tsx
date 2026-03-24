@@ -32,7 +32,7 @@ export function HeroSection({ totalBooks }: { totalBooks?: number }) {
             <span className="text-brand-600">발견하세요</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-500 md:text-xl">
-            전자책부터 AI 오디오북까지. <br className="hidden md:block" />
+            전자책부터 오디오북까지. <br className="hidden md:block" />
             당신의 다음 이야기가 여기 있습니다.
           </p>
 

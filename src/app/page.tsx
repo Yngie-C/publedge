@@ -112,12 +112,12 @@ export default function LandingPage() {
       </main>
 
       {/* Social Proof */}
-      {(data?.stats || data?.recentReviews) && (
+      {/* {(data?.stats || data?.recentReviews) && (
         <SocialProofSection
           stats={data?.stats ?? { totalBooks: 0, totalAuthors: 0, totalReviews: 0 }}
           reviews={data?.recentReviews ?? []}
         />
-      )}
+      )} */}
 
       <Footer />
     </div>
