@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -222,7 +222,9 @@ export function BookDetailClient() {
   }
 
   const { book, chapters, audiobook, reviews, series_metadata, subscriber_count, published_chapter_count, is_subscribed } = data;
-  const isOwner = user?.id === book.owner_id;
+  const searchParams = useSearchParams();
+  const viewAs = searchParams.get("viewAs");
+  const isOwner = viewAs === "customer" ? false : user?.id === book.owner_id;
   // [SUN-68] 시리즈 기능 — 추후 활성화
   const isSeries = false; // book.content_type === "series";
   const isPublished = book.status === "published";

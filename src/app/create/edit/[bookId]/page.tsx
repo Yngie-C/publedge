@@ -12,6 +12,7 @@ import {
   Check,
   Settings,
   X,
+  Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -207,6 +208,17 @@ export default function EditPage() {
 
         <div className="flex items-center gap-2">
           {book && <ExportMenu bookId={bookId} bookTitle={book.title} />}
+
+          <a
+            href={`/create/preview/${bookId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-9 items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50"
+            title="미리보기"
+          >
+            <Eye className="h-4 w-4" />
+            <span className="hidden sm:inline">미리보기</span>
+          </a>
 
           <button
             type="button"
