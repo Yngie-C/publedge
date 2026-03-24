@@ -170,6 +170,7 @@ export default function EditPage() {
       throw new Error(json.error ?? "저장 실패");
     }
     qc.invalidateQueries({ queryKey: ["book", bookId] });
+    setMetaOpen(false);
   };
 
   if (bookLoading || chaptersLoading) {
