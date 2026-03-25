@@ -255,7 +255,7 @@ JSON 구조:
 
 ## 스킬 실행해보기
 
-파일을 저장했으면 바로 실행해봐요. 프로젝트 폴더(`my-resume-pipeline/`)에서 Claude 코드 터미널을 열고, `claude` 를 실행한 뒤 슬래시 명령어를 입력해요.
+파일을 저장했으면 바로 실행해봐요. 프로젝트 폴더(`my-resume-pipeline/`)에서 Claude 코드 터미널을 열고, `claude` 를 실행한 뒤 스킬을 입력해요.
 
 ```bash
 claude
@@ -317,6 +317,14 @@ cat data/analysis/techcorp-backend.json
   "culture": "자기 주도적으로 문제를 정의하고 해결책을 찾으며, 동료와 적극 소통해 함께 성장하는 문화. 코드 품질과 유지보수성을 중시하고, 빠르게 변화하는 환경에서 완성도 높은 제품을 만드는 데 자부심을 느끼는 사람을 원함."
 }
 ```
+
+<!-- IMAGE: screenshot-ch03-json-result.png
+[스크린샷 필요] `/collect-jd` 실행 후 JSON 분석 결과.
+- 터미널에 JSON 구조가 출력된 화면
+- company, position, required, preferred, tech_stack, keywords, culture 필드가 보이는 상태
+- 7개 필드가 깔끔하게 구조화된 모습
+- JSON을 처음 보는 독자에게 "정상적인 결과"의 기준 이미지
+-->
 
 ### 결과를 어떻게 활용하나요?
 

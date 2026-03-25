@@ -124,7 +124,7 @@ macOS/Linux에서는 터미널에서 `crontab -e`를 입력해 편집해요.
 
 Windows 사용자는 **작업 스케줄러(Task Scheduler)**를 이용하면 돼요. 검색창에 "작업 스케줄러"를 입력하면 GUI로 설정할 수 있어요.
 
-> **NOTE:** Cron으로 Claude Code를 실행하려면 인증 토큰이 유효한 상태여야 해요. 토큰이 만료됐다면 `claude login`으로 재인증이 필요해요. 완전 자동화를 원한다면 API 키 방식(`ANTHROPIC_API_KEY` 환경 변수)을 사용하는 게 더 안정적이에요.
+> **NOTE:** Cron으로 Claude Code를 실행하려면 인증 토큰이 유효한 상태여야 해요. 토큰이 만료됐다면 `claude auth login`으로 재인증이 필요해요. 완전 자동화를 원한다면 API 키 방식(`ANTHROPIC_API_KEY` 환경 변수)을 사용하는 게 더 안정적이에요.
 
 ---
 
@@ -147,7 +147,7 @@ Windows 사용자는 **작업 스케줄러(Task Scheduler)**를 이용하면 돼
 
 ### 변할 수 있는 것들
 
-- 인증 방식 (현재: `claude login` OAuth 방식)
+- 인증 방식 (현재: `claude auth login` OAuth 방식)
 - 설치 명령어 및 패키지명
 - 세부적인 UI/UX 및 출력 형식
 - 일부 옵션 플래그 이름

@@ -19,7 +19,7 @@ $ARGUMENTS 에 자소서 markdown 파일 경로가 주어집니다.
 2. 해당 파일을 `md-to-pdf` 명령어로 PDF로 변환하세요:
 
 ```bash
-md-to-pdf {파일경로} --dest output/pdf/
+npx md-to-pdf {파일경로} && mv {파일명}.pdf output/pdf/
 ```
 
 3. `md-to-pdf`가 설치되어 있지 않다면 사용자에게 안내하세요:
@@ -55,4 +55,4 @@ md-to-pdf가 작동하지 않는 경우, 브라우저에서 직접 PDF로 저장
 ## 주의사항
 - md-to-pdf는 첫 실행 시 Chromium을 자동 다운로드해요 (~300MB)
 - 한글 폰트가 시스템에 설치되어 있어야 한글이 정상 출력돼요
-- `--dest` 플래그의 정확한 문법은 md-to-pdf 버전에 따라 다를 수 있어요. 실행 시 Claude가 자동으로 확인해줘요
+- md-to-pdf는 `--dest` 플래그를 지원하지 않아요. 변환 후 `mv` 명령어로 `output/pdf/`로 이동하는 방식을 사용해요

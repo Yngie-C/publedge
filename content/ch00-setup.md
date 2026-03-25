@@ -16,6 +16,26 @@
    PDF 내보내기
 ```
 
+<!-- IMAGE: diagram-pipeline-overview.png
+[다이어그램 필요] 전체 파이프라인 간략 플로우차트.
+
+구성 요소:
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│  📋 Step 1   │    │  ✍️ Step 2   │    │  🔍 Step 3   │    │  📄 Step 4   │
+│  채용공고     │ →  │  자소서      │ →  │  검토 &      │ →  │  PDF        │
+│  분석        │    │  생성        │    │  환각 검출    │    │  내보내기    │
+│ /collect-jd  │    │/generate-   │    │/review-     │    │/export-pdf  │
+│              │    │ resume      │    │ resume      │    │             │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+     ↓                   ↓                   ↓                   ↓
+  JSON 파일          마크다운 자소서       채점표 + 피드백       PDF 파일
+
+- 4단계를 수평 플로우차트로 표현
+- 각 단계에 스킬 이름과 아이콘 포함
+- 각 단계의 출력물(JSON, MD, 채점표, PDF) 표시
+- 컬러풀하고 직관적인 디자인
+-->
+
 터미널 명령어 몇 줄로, 채용 공고 하나를 붙여 넣으면 자소서 초안이 뚝딱 만들어지는 구조예요. 이 책을 끝내면 구체적으로 이런 걸 할 수 있어요.
 
 1. **채용 공고를 분석하는 나만의 AI 어시스턴트** — 공고를 붙여 넣으면 핵심 키워드, 요구 역량, 기업 분위기를 정리해줘요.
@@ -35,6 +55,13 @@
 ### macOS
 
 키보드에서 `Cmd(⌘) + Space`를 눌러 Spotlight 검색창을 열고, "터미널"이라고 입력한 뒤 엔터를 눌러요. 까만 창이 뜨면 성공이에요.
+
+<!-- IMAGE: screenshot-ch00-terminal-open.png
+[스크린샷 필요] macOS Spotlight 검색창에서 "터미널"을 검색하는 화면.
+- Spotlight 열기: Cmd + Space
+- 검색창에 "터미널" 입력
+- 터미널 앱이 검색 결과에 나타난 상태
+-->
 
 ### Windows
 
@@ -73,6 +100,13 @@ v20.11.0
 10.2.4
 ```
 
+<!-- IMAGE: screenshot-ch00-node-version.png
+[스크린샷 필요] 터미널에서 `node --version` 실행 결과.
+- 터미널 창에 `node --version` 입력된 상태
+- 아래에 `v20.x.x` 같은 버전 번호 출력
+- 성공 상태의 기준 이미지
+-->
+
 > **WARNING:** Node.js는 **버전 18 이상**이 필요해요. 만약 `v16.x.x` 같이 낮은 버전이 나온다면, nodejs.org에서 최신 LTS를 다시 설치해주세요. 이전 버전 위에 덮어씌워도 괜찮아요.
 
 ---
@@ -96,6 +130,12 @@ claude --version
 ```
 
 버전 번호가 출력되면 성공이에요.
+
+<!-- IMAGE: screenshot-ch00-claude-version.png
+[스크린샷 필요] 터미널에서 `claude --version` 실행 결과.
+- `claude --version` 입력
+- 버전 번호(예: 1.x.x) 출력된 상태
+-->
 
 > **NOTE:** macOS에서 `EACCES: permission denied` 같은 권한 오류가 나타나면, 앞에 `sudo`를 붙여서 실행해요.
 >
@@ -129,7 +169,7 @@ Claude Code를 사용하려면 **Claude Pro 또는 Max 플랜** 구독이 필요
 터미널에서 아래 명령어를 실행해요.
 
 ```bash
-claude login
+claude auth login
 ```
 
 명령어를 실행하면 **브라우저가 자동으로 열려요**. claude.ai 로그인 페이지가 나타나면 계정 정보로 로그인하면 돼요.
@@ -140,7 +180,14 @@ claude login
 인증 완료! Claude Code를 사용할 준비가 됐습니다.
 ```
 
-> **NOTE:** Pro 또는 Max 구독이 있으면 별도로 API 키를 만들거나 입력할 필요가 없어요. `claude login`으로 계정 인증만 하면 바로 사용할 수 있어요. 훨씬 간단하죠?
+<!-- IMAGE: screenshot-ch00-login-flow.png
+[스크린샷 필요] `claude auth login` 실행 후 브라우저 인증 흐름 (2~3장).
+- 1장: 터미널에 `claude auth login` 입력 후 "브라우저에서 인증 페이지를 열겠습니다" 메시지
+- 2장: 브라우저에서 Anthropic 로그인/인증 페이지
+- 3장: 인증 완료 후 터미널에 성공 메시지 출력
+-->
+
+> **NOTE:** Pro 또는 Max 구독이 있으면 별도로 API 키를 만들거나 입력할 필요가 없어요. `claude auth login`으로 계정 인증만 하면 바로 사용할 수 있어요. 훨씬 간단하죠?
 
 ---
 
@@ -204,3 +251,15 @@ my-resume-pipeline/
 ```
 
 아직 파일이 아무것도 없는 게 맞아요. 다음 챕터부터 하나씩 채워나갈 거예요.
+
+---
+
+## 이번 챕터 체크리스트
+
+아래 항목을 모두 확인했다면, 다음 챕터로 넘어갈 준비가 된 거예요!
+
+- [ ] Node.js 설치 확인 (`node --version`으로 버전 번호 출력)
+- [ ] Claude Code 설치 확인 (`claude --version`으로 버전 번호 출력)
+- [ ] Claude 계정 로그인 완료 (`claude auth login`)
+- [ ] 프로젝트 폴더 생성 (`my-resume-pipeline`)
+- [ ] Claude Code 실행 후 대화 테스트 ("안녕하세요" 입력 후 응답 확인)
