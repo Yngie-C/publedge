@@ -155,7 +155,10 @@ body {
 }
 
 .reader-content li {
-  margin-bottom: 0.5em;
+  margin-bottom: 0.15em;
+}
+.reader-content li > p {
+  margin-bottom: 0.15em;
 }
 
 .reader-content a {
@@ -190,9 +193,10 @@ body {
   margin: 1em 0;
   padding-left: 1.5em;
 }
-.prose li { margin-bottom: 0.5em; }
+.prose li { margin-bottom: 0.15em; }
+.prose li > p { margin-bottom: 0.15em; }
 .prose li > ul,
-.prose li > ol { margin: 0.25em 0; }
+.prose li > ol { margin: 0.15em 0; }
 
 .prose blockquote {
   border-left: 3px solid #d1d5db;

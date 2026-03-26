@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
+import { SlashCommand } from "./extensions/SlashCommand";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Highlight from "@tiptap/extension-highlight";
@@ -11,6 +12,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import Placeholder from "@tiptap/extension-placeholder";
 import { EditorToolbar } from "./EditorToolbar";
 import { EditorMenuBubble } from "./EditorMenuBubble";
+import { BlockExitOnEnter } from "./extensions/BlockExitOnEnter";
 import { cn } from "@/lib/utils";
 
 interface RichTextEditorProps {
@@ -33,14 +35,17 @@ export function RichTextEditor({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Track the chapterId to detect chapter switches
   const prevChapterRef = useRef<string>(chapterId);
+  const imageUploadRef = useRef<(() => void) | null>(null);
 
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         heading: { levels: [1, 2, 3] },
-        // codeBlock is included in StarterKit
+        codeBlock: { exitOnTripleEnter: false },
       }),
+      BlockExitOnEnter,
+      SlashCommand.configure({ imageUploadRef }),
       Underline,
       Highlight.configure({ multicolor: false }),
       Image.configure({ inline: false, allowBase64: true }),
@@ -116,6 +121,10 @@ export function RichTextEditor({
     };
     input.click();
   }, [editor, bookId, chapterId]);
+
+  useEffect(() => {
+    imageUploadRef.current = handleImageUpload;
+  }, [handleImageUpload]);
 
   const wordCount = editor
     ? editor.getText().trim().split(/\s+/).filter(Boolean).length
