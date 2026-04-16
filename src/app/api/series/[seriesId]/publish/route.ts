@@ -61,7 +61,13 @@ export async function POST(
     .select()
     .single();
 
-  if (publishError) return apiError(publishError.message, "SERVER_ERROR", 500);
+  if (publishError || !publishedChapter) {
+    return apiError(
+      publishError?.message ?? "Failed to publish chapter",
+      "SERVER_ERROR",
+      500,
+    );
+  }
 
   // Update series_metadata.last_chapter_published_at
   await supabase

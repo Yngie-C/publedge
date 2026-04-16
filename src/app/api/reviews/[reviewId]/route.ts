@@ -64,7 +64,9 @@ export async function PUT(
     )
     .single();
 
-  if (error) return apiError(error.message, "SERVER_ERROR", 500);
+  if (error || !data) {
+    return apiError(error?.message ?? "Failed to update review", "SERVER_ERROR", 500);
+  }
 
   return apiSuccess(data);
 }

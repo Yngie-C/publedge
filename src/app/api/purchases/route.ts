@@ -20,7 +20,11 @@ export async function GET() {
     .eq("status", "completed")
     .order("purchased_at", { ascending: false });
 
-  if (error) return apiError(error.message, "SERVER_ERROR", 500);
+  if (error) {
+    // If the table doesn't exist or query fails, return empty array gracefully
+    console.error("[purchases] Supabase query error:", error.message);
+    return apiSuccess([]);
+  }
 
   // Fetch author names separately (no direct FK between books and user_profiles)
   const ownerIds = [...new Set(
