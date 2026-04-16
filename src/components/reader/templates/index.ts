@@ -1,0 +1,13 @@
+import "./ChecklistReader";
+import "./CalloutReader";
+import "./ReflectionReader";
+import "./ToggleReader";
+import "./ColumnListReader";
+import "./SmartGoalReader";
+import "./BeforeAfterReader";
+import "./ScaleReader";
+import "./QuadrantReader";
+import "./OkrReader";
+import "./HabitTrackerReader";
+import "./WoopReader";
+export { getTemplateComponent, registerTemplate } from "./TemplateRenderer";

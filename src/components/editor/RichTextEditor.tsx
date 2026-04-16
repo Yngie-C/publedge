@@ -13,6 +13,11 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { EditorToolbar } from "./EditorToolbar";
 import { EditorMenuBubble } from "./EditorMenuBubble";
 import { BlockExitOnEnter } from "./extensions/BlockExitOnEnter";
+import {
+  ChecklistNode, CalloutNode, ReflectionNode, ToggleNode,
+  ColumnListNode, SmartGoalNode, BeforeAfterNode, ScaleNode,
+  QuadrantNode, OkrNode, HabitTrackerNode, WoopNode,
+} from "./extensions/templates";
 import { cn } from "@/lib/utils";
 
 interface RichTextEditorProps {
@@ -58,6 +63,18 @@ export function RichTextEditor({
       }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       Placeholder.configure({ placeholder }),
+      ChecklistNode,
+      CalloutNode,
+      ReflectionNode,
+      ToggleNode,
+      ColumnListNode,
+      SmartGoalNode,
+      BeforeAfterNode,
+      ScaleNode,
+      QuadrantNode,
+      OkrNode,
+      HabitTrackerNode,
+      WoopNode,
     ],
     content,
     editorProps: {

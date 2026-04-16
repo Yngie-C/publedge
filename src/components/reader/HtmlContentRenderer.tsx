@@ -3,6 +3,8 @@
 import { sanitizeForRender } from "@/lib/sanitize";
 import type { ReaderTheme } from "@/types";
 import { useMemo } from "react";
+import parse, { type DOMNode, Element } from "html-react-parser";
+import { getTemplateComponent } from "./templates";
 
 interface HtmlContentRendererProps {
   html: string;
@@ -10,6 +12,7 @@ interface HtmlContentRendererProps {
   fontSize: number;
   lineHeight: number;
   className?: string;
+  chapterId?: string;
 }
 
 const themeClasses: Record<ReaderTheme, string> = {
@@ -24,8 +27,28 @@ export function HtmlContentRenderer({
   fontSize,
   lineHeight,
   className = "",
+  chapterId = "",
 }: HtmlContentRendererProps) {
   const sanitized = useMemo(() => sanitizeForRender(html), [html]);
+
+  const content = useMemo(
+    () =>
+      parse(sanitized, {
+        replace(domNode: DOMNode) {
+          if (!(domNode instanceof Element)) return;
+          const templateType = domNode.attribs?.["data-template-type"];
+          if (!templateType) return;
+
+          const Component = getTemplateComponent(templateType);
+          if (!Component) {
+            console.warn(`Unknown template type: ${templateType}`);
+            return; // render original HTML as-is
+          }
+          return <Component element={domNode} chapterId={chapterId} />;
+        },
+      }),
+    [sanitized, chapterId]
+  );
 
   return (
     <div
@@ -35,7 +58,8 @@ export function HtmlContentRenderer({
         className,
       ].join(" ")}
       style={{ fontSize: `${fontSize}px`, lineHeight }}
-      dangerouslySetInnerHTML={{ __html: sanitized }}
-    />
+    >
+      {content}
+    </div>
   );
 }

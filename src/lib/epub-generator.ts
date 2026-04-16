@@ -1,4 +1,5 @@
 import type { Book, Chapter } from "@/types";
+import { applyTemplateFallback } from "./template-fallback";
 
 // ── Minimal ZIP builder (no external dependency) ──────────────────────────
 
@@ -273,7 +274,7 @@ ${navItems}
 }
 
 function chapterXhtml(book: Book, chapter: Chapter, index: number): string {
-  const body = toXhtml(chapter.content_html || `<p>${xmlEscape(chapter.content_raw || "")}</p>`);
+  const body = toXhtml(applyTemplateFallback(chapter.content_html || `<p>${xmlEscape(chapter.content_raw || "")}</p>`));
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
