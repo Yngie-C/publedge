@@ -192,8 +192,7 @@ Claude가 파일 수정을 마쳤으면 브라우저에서 `F5`(Windows) 또는 
       display: flex;
       align-items: center;
       gap: 36px;
-      max-width: 560px;
-      width: 100%;
+      max-width: 560px; width: 100%;
     }
     .avatar {
       width: 100px;
