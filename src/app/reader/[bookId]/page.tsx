@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import type { Book, Chapter } from "@/types";
+import { HtmlContentRenderer } from "@/components/reader/HtmlContentRenderer";
 
 async function fetchBook(id: string): Promise<Book> {
   const res = await fetch(`/api/books/${id}`);
@@ -147,9 +148,13 @@ export default function ReaderPage() {
               <h1 className="mb-8 text-2xl font-bold text-gray-900">
                 {currentChapter.title}
               </h1>
-              <div
+              <HtmlContentRenderer
+                html={currentChapter.content_html}
+                theme="light"
+                fontSize={16}
+                lineHeight={1.8}
+                chapterId={currentChapter.id}
                 className="prose prose-gray max-w-none leading-relaxed text-gray-800"
-                dangerouslySetInnerHTML={{ __html: currentChapter.content_html }}
               />
             </>
           )}

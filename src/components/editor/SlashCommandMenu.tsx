@@ -9,6 +9,7 @@ export interface SlashMenuItem {
   title: string;
   aliases: string[];
   icon: LucideIcon;
+  category?: string;
   command: (props: { editor: Editor; range: { from: number; to: number } }) => void;
 }
 
@@ -74,28 +75,36 @@ export const SlashCommandMenu = forwardRef<SlashCommandMenuHandle, SlashCommandM
       >
         {items.map((item, index) => {
           const Icon = item.icon;
+          const prevCategory = index > 0 ? items[index - 1].category : undefined;
+          const showCategoryHeader = item.category && item.category !== prevCategory;
           return (
-            <button
-              key={item.title}
-              type="button"
-              role="option"
-              aria-selected={index === selectedIndex}
-              className={cn(
-                "flex w-full items-center gap-3 px-3 py-2 text-left text-sm transition-colors",
-                index === selectedIndex
-                  ? "bg-gray-100 text-gray-900"
-                  : "text-gray-700 hover:bg-gray-50"
+            <div key={item.title}>
+              {showCategoryHeader && (
+                <div className="px-3 pt-3 pb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                  {item.category}
+                </div>
               )}
-              onClick={() => selectItem(index)}
-              onMouseEnter={() => setSelectedIndex(index)}
-            >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-gray-200 bg-white">
-                <Icon className="h-4 w-4 text-gray-600" />
-              </div>
-              <div>
-                <div className="font-medium">{item.title}</div>
-              </div>
-            </button>
+              <button
+                type="button"
+                role="option"
+                aria-selected={index === selectedIndex}
+                className={cn(
+                  "flex w-full items-center gap-3 px-3 py-2 text-left text-sm transition-colors",
+                  index === selectedIndex
+                    ? "bg-gray-100 text-gray-900"
+                    : "text-gray-700 hover:bg-gray-50"
+                )}
+                onClick={() => selectItem(index)}
+                onMouseEnter={() => setSelectedIndex(index)}
+              >
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-gray-200 bg-white">
+                  <Icon className="h-4 w-4 text-gray-600" />
+                </div>
+                <div>
+                  <div className="font-medium">{item.title}</div>
+                </div>
+              </button>
+            </div>
           );
         })}
       </div>

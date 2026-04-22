@@ -14,6 +14,7 @@ interface UseVirtualPaginatorReturn {
   goToPage: (page: number) => void;
   nextPage: () => void;
   prevPage: () => void;
+  repaginate: () => void;
 }
 
 /**
@@ -61,14 +62,27 @@ export function useVirtualPaginator(
 
     recalculate();
 
-    const observer = new ResizeObserver(() => {
+    const resizeObserver = new ResizeObserver(() => {
       recalculate();
       // Reset to page 1 on resize to avoid stale position
       setCurrentPage(1);
     });
-    observer.observe(el);
+    resizeObserver.observe(el);
 
-    return () => observer.disconnect();
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+    const mutationObserver = new MutationObserver(() => {
+      if (debounceTimer !== null) clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        recalculate();
+      }, 100);
+    });
+    mutationObserver.observe(el, { childList: true, subtree: true, attributes: true });
+
+    return () => {
+      resizeObserver.disconnect();
+      mutationObserver.disconnect();
+      if (debounceTimer !== null) clearTimeout(debounceTimer);
+    };
   }, [recalculate]);
 
   // Apply the visual offset when currentPage changes
@@ -80,6 +94,10 @@ export function useVirtualPaginator(
     const offset = (currentPage - 1) * (containerWidth + columnGap);
     el.scrollLeft = offset;
   }, [currentPage, columnGap]);
+
+  const repaginate = useCallback(() => {
+    recalculate();
+  }, [recalculate]);
 
   const goToPage = useCallback(
     (page: number) => {
@@ -96,5 +114,5 @@ export function useVirtualPaginator(
     setCurrentPage((p) => Math.max(p - 1, 1));
   }, []);
 
-  return { containerRef, currentPage, totalPages, goToPage, nextPage, prevPage };
+  return { containerRef, currentPage, totalPages, goToPage, nextPage, prevPage, repaginate };
 }

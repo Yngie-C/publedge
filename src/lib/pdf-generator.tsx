@@ -8,6 +8,7 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import type { Book, Chapter } from "@/types";
+import { applyTemplateFallback } from "./template-fallback";
 
 // Register a standard font (Helvetica is built-in, no external download needed)
 // Korean characters will fall back to the default renderer behavior
@@ -364,7 +365,7 @@ function ChapterPage({
   chapter: Chapter;
   pageNumber: number;
 }) {
-  const blocks = stripHtmlForPdf(chapter.content_html || chapter.content_raw || "");
+  const blocks = stripHtmlForPdf(applyTemplateFallback(chapter.content_html || chapter.content_raw || ""));
 
   return (
     <Page size="A4" style={styles.chapterPage}>
