@@ -120,16 +120,16 @@ Claude Code를 사용하려면 **Claude Pro 또는 Max 플랜** 구독이 필요
 
 > **WARNING:** 구독료는 매월 자동으로 결제돼요. 포트폴리오 작업이 마무리됐다면 구독 해지를 잊지 마세요. claude.ai → 설정 → 구독 관리에서 언제든지 해지할 수 있어요.
 
-터미널에서 아래 명령어를 실행해요.
-
-```bash
-claude auth login
-```
-
-명령어를 실행하면 **브라우저가 자동으로 열려요**. 계정 정보로 로그인하면 터미널에 아래 메시지가 나타나요.
+`claude` 명령을 처음 실행하면 자동으로 브라우저가 열려 로그인 페이지로 이동해요. 계정 정보로 로그인하면 터미널에 아래 메시지가 나타나요.
 
 ```
 인증 완료! Claude Code를 사용할 준비가 됐습니다.
+```
+
+만약 브라우저가 자동으로 열리지 않으면 터미널에서 아래 명령을 실행해요.
+
+```bash
+claude auth login
 ```
 
 > **NOTE:** Pro 또는 Max 구독이 있으면 별도로 API 키를 입력할 필요가 없어요. `claude auth login`으로 계정 인증만 하면 바로 사용할 수 있어요.
@@ -229,7 +229,7 @@ my-portfolio/
 
 - [ ] Node.js 설치 확인 (`node --version`으로 버전 번호 출력)
 - [ ] Claude Code 설치 확인 (`claude --version`으로 버전 번호 출력)
-- [ ] Claude 계정 로그인 완료 (`claude auth login`)
+- [ ] Claude 계정 로그인 완료 (`claude` 실행 또는 `claude auth login`)
 - [ ] GitHub 계정 생성 완료
 - [ ] Vercel 계정 생성 완료 (GitHub 연동 권장)
 - [ ] 프로젝트 폴더 생성 (`my-portfolio`)

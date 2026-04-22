@@ -235,18 +235,18 @@ Ch3 완성 화면. 같은 구조에 크림-아이보리-딥 브라운-올리브 
     <div class="project-grid">
       <article class="project-card">
         <h3 class="project-card__title">서울 카페 데이터 분석</h3>
-        <p class="project-card__desc">서울 25개 구의 카페 밀집도와 폐업률을 분석해 상권 패턴을 시각화했어요.</p>
-        <a class="project-card__link" href="..." target="_blank" rel="noopener noreferrer">결과 보기 →</a>
+        <p class="project-card__desc">공공데이터 API로 서울시 카페 밀집도를 시각화한 토이 프로젝트예요.</p>
+        <a class="project-card__link" href="https://github.com/minji/cafe-map" target="_blank" rel="noopener noreferrer">서울 카페 데이터 분석 보기 →</a>
       </article>
       <article class="project-card">
-        <h3 class="project-card__title">독서 기록 대시보드</h3>
-        <p class="project-card__desc">3년치 독서 데이터를 분석하고 장르별 완독률·평점 변화를 인터랙티브 차트로 표현했어요.</p>
-        <a class="project-card__link" href="..." target="_blank" rel="noopener noreferrer">대시보드 보기 →</a>
+        <h3 class="project-card__title">뉴스 클론 코딩</h3>
+        <p class="project-card__desc">네이버 뉴스 메인 페이지를 HTML/CSS로 클론한 연습 프로젝트예요.</p>
+        <a class="project-card__link" href="https://github.com/minji/news-clone" target="_blank" rel="noopener noreferrer">뉴스 클론 코딩 보기 →</a>
       </article>
       <article class="project-card">
-        <h3 class="project-card__title">채용 공고 키워드 분석</h3>
-        <p class="project-card__desc">데이터 직군 채용 공고 2,000건을 크롤링해 요구 스킬 트렌드 변화를 정리했어요.</p>
-        <a class="project-card__link" href="..." target="_blank" rel="noopener noreferrer">리포트 보기 →</a>
+        <h3 class="project-card__title">동아리 홈페이지</h3>
+        <p class="project-card__desc">데이터 분석 동아리 소개 및 활동 기록을 담은 정적 사이트예요.</p>
+        <a class="project-card__link" href="https://minji-club.vercel.app" target="_blank" rel="noopener noreferrer">동아리 홈페이지 보기 →</a>
       </article>
     </div>
   </section>
