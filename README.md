@@ -237,14 +237,13 @@ npm install
 
 ### 환경 변수
 
-`.env.local` 파일을 생성하고 다음 값을 설정합니다:
+`.env.example`을 복사해 `.env.local`을 만들고 로컬 값으로 채웁니다. 실제 secret 값은 커밋하지 않습니다.
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
-SUPABASE_SECRET_KEY=your_supabase_secret_key
-OPENAI_API_KEY=your_openai_api_key
+```bash
+cp .env.example .env.local
 ```
+
+필수/선택 환경변수 목록은 `.env.example`을 기준으로 관리합니다.
 
 ### DB 마이그레이션
 
@@ -264,6 +263,16 @@ npm run dev
 
 [http://localhost:3000](http://localhost:3000)에서 확인할 수 있습니다.
 
+### 검증
+
+코드 변경 후 가능한 범위에서 아래 명령어를 실행합니다.
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+```
+
 ### 빌드
 
 ```bash
@@ -276,19 +285,32 @@ npm run build
 
 ```
 /                          랜딩 페이지
-/auth/login                로그인
-/auth/signup               회원가입
+/about                     서비스 소개
+/faq                       자주 묻는 질문
+/privacy                   개인정보처리방침
+/terms                     이용약관
+/auth/*                    인증 플로우
 /dashboard                 내 서재
-/create                    새 전자책 만들기
+/library                   라이브러리
+/my                        내 계정/내 콘텐츠 영역
+/create                    새 콘텐츠 만들기
 /create/upload             파일 업로드
 /create/edit/:bookId       챕터 편집 (리치 에디터)
+/create/preview/:bookId    출판 전 미리보기
+/create/series             연재 시리즈 생성
 /reader/:bookId            전자책 리더
 /listen/:bookId            오디오북 플레이어
 /book/:bookId              전자책 상세 (공개)
+/author/:authorId          작가 공개 페이지
 /explore                   탐색
 /analytics                 분석 대시보드
-/subscription              구독 플랜
+/creator                   크리에이터 홈
+/creator/analytics         크리에이터 분석
+/notifications             알림
+/payments/*                결제 플로우
+/series/:seriesId          시리즈 상세
 /settings                  사용자 설정
+/studio                    스튜디오
 ```
 
 ---
