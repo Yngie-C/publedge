@@ -1,14 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PenLine, Upload } from "lucide-react";
-// [SUN-68] 시리즈 기능 — 추후 활성화
-// import { BookMarked } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Header } from "@/components/layout/Header";
+import { isWizardCompleted } from "@/lib/wizard-utils";
 
 const LANGUAGES = [
   { value: "ko", label: "한국어" },
@@ -25,6 +24,11 @@ export default function CreatePage() {
   const [error, setError] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [price, setPrice] = useState<number>(0);
+  const [showWizardBanner, setShowWizardBanner] = useState(false);
+
+  useEffect(() => {
+    setShowWizardBanner(!isWizardCompleted());
+  }, []);
 
   const validate = (): boolean => {
     if (!title.trim()) {
@@ -47,7 +51,6 @@ export default function CreatePage() {
     setError("");
 
     try {
-      // 1. 콘텐츠 생성
       const bookRes = await fetch("/api/books", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -68,7 +71,6 @@ export default function CreatePage() {
       const bookJson = await bookRes.json();
       const bookId = bookJson.data.id;
 
-      // 2. 빈 챕터 생성 (실패 시 1회 재시도)
       let chapterCreated = false;
       for (let attempt = 0; attempt < 2; attempt++) {
         const chapterRes = await fetch("/api/chapters", {
@@ -92,7 +94,6 @@ export default function CreatePage() {
         console.warn("챕터 생성 실패 — 에디터에서 수동 추가 가능");
       }
 
-      // 3. 에디터로 이동
       router.push(`/create/edit/${bookId}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "오류가 발생했습니다.");
@@ -112,23 +113,31 @@ export default function CreatePage() {
           </p>
         </div>
 
-        {/* [SUN-68] 시리즈 기능 — 추후 활성화 */}
-        {/* <div className="mb-6 rounded-2xl border border-[#FF5126]/20 bg-orange-50 p-5">
-          <div className="flex items-start gap-4">
-            <div className="rounded-xl bg-[#FF5126]/10 p-3">
-              <BookMarked className="h-6 w-6 text-[#FF5126]" />
-            </div>
-            <div className="flex-1">
-              <h2 className="font-semibold text-gray-900">연재 시리즈 시작하기</h2>
-              <p className="mt-1 text-sm text-gray-500">
-                챕터를 순서대로 발행하는 연재 시리즈를 만들 수 있습니다. 구독자에게 새 챕터 알림이 전송됩니다.
-              </p>
-              <Button asChild variant="outline" size="sm" className="mt-3 border-[#FF5126]/30 text-[#FF5126] hover:bg-[#FF5126]/5">
-                <Link href="/create/series">새 시리즈 시작</Link>
-              </Button>
+        {/* Wizard prompt for first-time users */}
+        {showWizardBanner && (
+          <div className="mb-6 rounded-2xl border border-brand-200 bg-gradient-to-r from-brand-50 to-orange-50 p-5">
+            <div className="flex items-start gap-4">
+              <div className="rounded-xl bg-brand-100 p-3 text-2xl">
+                📖
+              </div>
+              <div className="flex-1">
+                <h2 className="font-semibold text-gray-900">
+                  처음이신가요? 단계별로 책을 만들어보세요!
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  첫 책은 가이드를 따라 단계별로 쉽게 만들고, 이후에는 빠르게 생성할 수 있어요.
+                </p>
+                <Button
+                  asChild
+                  size="sm"
+                  className="mt-3 rounded-full bg-gray-900 hover:bg-gray-800"
+                >
+                  <Link href="/create/wizard">가이드 따라 만들기</Link>
+                </Button>
+              </div>
             </div>
           </div>
-        </div> */}
+        )}
 
         <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
           <div className="flex flex-col gap-5">
